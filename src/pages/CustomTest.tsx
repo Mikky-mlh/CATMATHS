@@ -32,7 +32,7 @@ export function CustomTest() {
     try {
       const apiKey = process.env.GEMINI_API_KEY;
       if (!apiKey || apiKey === 'MY_GEMINI_API_KEY') {
-        throw new Error('Please configure your Gemini API Key in the AI Studio settings.');
+        throw new Error('Please configure your Gemini API Key for CATMATHS components.');
       }
 
       const ai = new GoogleGenAI({ apiKey });

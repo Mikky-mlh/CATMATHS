@@ -20,7 +20,7 @@ export function Dashboard() {
         </div>
         <div className="relative z-10 max-w-2xl">
           <h1 className="text-4xl md:text-5xl font-extrabold mb-4 tracking-tight">
-            Master CAT Math
+            Master CATMATHS
           </h1>
           <p className="text-lg md:text-xl text-blue-100 mb-8 leading-relaxed">
             From zero to hero. A definitive compendium of mathematical aptitude for advanced management entrance.
