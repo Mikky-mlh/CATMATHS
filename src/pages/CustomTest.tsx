@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { GoogleGenAI, Type } from '@google/genai';
+import { GoogleGenerativeAI, SchemaType } from '@google/generative-ai';
 import { BrainCircuit, Loader2, AlertCircle } from 'lucide-react';
 import { getAllTopics, QuizQuestion } from '../data/syllabus';
 import { QuizEngine } from '../components/QuizEngine';
@@ -35,7 +35,7 @@ export function CustomTest() {
         throw new Error('Please configure your Gemini API Key for CATMATHS components.');
       }
 
-      const ai = new GoogleGenAI({ apiKey });
+      const ai = new GoogleGenerativeAI(apiKey);
       const topicNames = selectedTopics
         .map(id => allTopics.find(t => t.id === id)?.title)
         .filter(Boolean)
@@ -50,22 +50,21 @@ export function CustomTest() {
       - correctAnswer: the exact string of the correct option (for mcq) or the exact numerical answer (for tita)
       - solution: step-by-step explanation. Use $...$ for inline math and $$...$$ for block math.`;
 
-      const response = await ai.models.generateContent({
-        model: 'gemini-3.1-pro-preview',
-        contents: prompt,
-        config: {
+      const model = ai.getGenerativeModel({
+        model: 'gemini-2.0-flash-exp',
+        generationConfig: {
           responseMimeType: 'application/json',
           responseSchema: {
-            type: Type.ARRAY,
+            type: SchemaType.ARRAY,
             items: {
-              type: Type.OBJECT,
+              type: SchemaType.OBJECT,
               properties: {
-                id: { type: Type.INTEGER },
-                type: { type: Type.STRING },
-                question: { type: Type.STRING },
-                options: { type: Type.ARRAY, items: { type: Type.STRING } },
-                correctAnswer: { type: Type.STRING },
-                solution: { type: Type.STRING }
+                id: { type: SchemaType.INTEGER },
+                type: { type: SchemaType.STRING },
+                question: { type: SchemaType.STRING },
+                options: { type: SchemaType.ARRAY, items: { type: SchemaType.STRING } },
+                correctAnswer: { type: SchemaType.STRING },
+                solution: { type: SchemaType.STRING }
               },
               required: ["id", "type", "question", "options", "correctAnswer", "solution"]
             }
@@ -73,13 +72,14 @@ export function CustomTest() {
         }
       });
 
-      const data = JSON.parse(response.text || '[]');
+      const response = await model.generateContent(prompt);
+      const data = JSON.parse(response.response.text() || '[]');
       
       const formattedQuestions: QuizQuestion[] = data.map((q: any) => {
         let correct: number | string = q.correctAnswer;
         if (q.type === 'mcq') {
           const idx = q.options.findIndex((opt: string) => opt === q.correctAnswer);
-          correct = idx !== -1 ? 0 : idx;
+          correct = idx !== -1 ? idx : 0;
         }
         return {
           id: q.id,
