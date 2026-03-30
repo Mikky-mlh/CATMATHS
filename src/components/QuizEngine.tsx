@@ -86,7 +86,6 @@ export function QuizEngine({ questions, onComplete }: QuizEngineProps) {
 
   return (
     <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
-      {/* Header */}
       <div className="p-4 bg-gray-50 dark:bg-gray-800/80 border-b border-gray-100 dark:border-gray-700 flex justify-between items-center">
         <span className="font-semibold text-gray-600 dark:text-gray-300">
           Question {currentIndex + 1} of {questions.length}
@@ -168,7 +167,6 @@ export function QuizEngine({ questions, onComplete }: QuizEngineProps) {
           </form>
         )}
 
-        {/* Actions & Solution */}
         <div className="mt-8">
           {!isSubmitted ? (
             <button

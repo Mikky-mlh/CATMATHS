@@ -29,7 +29,6 @@ export function TopicPage() {
 
   return (
     <div className="space-y-8 pb-12 animate-in fade-in duration-500">
-      {/* Breadcrumbs */}
       <nav className="flex items-center text-sm font-medium text-gray-500 dark:text-gray-400">
         <Link to="/" className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors flex items-center gap-1">
           <Home className="w-4 h-4" />
@@ -43,7 +42,6 @@ export function TopicPage() {
         </span>
       </nav>
 
-      {/* Header */}
       <header className="border-b border-gray-200 dark:border-gray-700 pb-8">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <h1 className="text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-white tracking-tight">
@@ -64,12 +62,10 @@ export function TopicPage() {
         </div>
       </header>
 
-      {/* Content */}
       <article className="prose prose-blue dark:prose-invert max-w-none">
         {topic.content}
       </article>
 
-      {/* Practice Section */}
       <section className="pt-12 border-t border-gray-200 dark:border-gray-700">
         <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
           <span className="text-3xl">✏️</span> Practice Questions
@@ -84,7 +80,6 @@ export function TopicPage() {
         />
       </section>
 
-      {/* Navigation Footer */}
       <nav className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-gray-200 dark:border-gray-700">
         {prevTopic ? (
           <Link

@@ -10,7 +10,6 @@ export function CheatSheet() {
 
   return (
     <div className="max-w-4xl mx-auto pb-12">
-      {/* Header - Hidden on Print */}
       <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-8 print:hidden">
         <Link to="/" className="flex items-center gap-2 text-gray-500 hover:text-blue-600 dark:hover:text-blue-400 transition-colors font-medium">
           <ArrowLeft className="w-5 h-5" />
@@ -25,7 +24,6 @@ export function CheatSheet() {
         </button>
       </div>
 
-      {/* Printable Content */}
       <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-sm border border-gray-100 dark:border-gray-700 p-8 md:p-12 print:shadow-none print:border-none print:p-0">
         <div className="text-center mb-12 border-b-2 border-gray-200 dark:border-gray-700 pb-8">
           <h1 className="text-4xl font-extrabold text-gray-900 dark:text-white mb-4 flex items-center justify-center gap-3">
@@ -38,7 +36,6 @@ export function CheatSheet() {
         </div>
 
         <div className="space-y-12">
-          {/* Section 1: Arithmetic */}
           <section>
             <h2 className="text-2xl font-bold text-blue-600 dark:text-blue-400 border-b border-gray-100 dark:border-gray-700 pb-2 mb-6 uppercase tracking-wider">
               1. Arithmetic
@@ -83,7 +80,6 @@ export function CheatSheet() {
             </div>
           </section>
 
-          {/* Section 2: Algebra */}
           <section>
             <h2 className="text-2xl font-bold text-emerald-600 dark:text-emerald-400 border-b border-gray-100 dark:border-gray-700 pb-2 mb-6 uppercase tracking-wider">
               2. Algebra
@@ -113,7 +109,6 @@ export function CheatSheet() {
             </div>
           </section>
 
-          {/* Section 3: Number Systems */}
           <section>
             <h2 className="text-2xl font-bold text-purple-600 dark:text-purple-400 border-b border-gray-100 dark:border-gray-700 pb-2 mb-6 uppercase tracking-wider">
               3. Number Systems
@@ -140,7 +135,6 @@ export function CheatSheet() {
             </div>
           </section>
 
-          {/* Section 4: Geometry & Mensuration */}
           <section>
             <h2 className="text-2xl font-bold text-orange-600 dark:text-orange-400 border-b border-gray-100 dark:border-gray-700 pb-2 mb-6 uppercase tracking-wider">
               4. Geometry & Mensuration
@@ -167,7 +161,6 @@ export function CheatSheet() {
             </div>
           </section>
 
-          {/* Section 5: Modern Math */}
           <section>
             <h2 className="text-2xl font-bold text-pink-600 dark:text-pink-400 border-b border-gray-100 dark:border-gray-700 pb-2 mb-6 uppercase tracking-wider">
               5. Modern Math

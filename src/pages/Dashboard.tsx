@@ -13,7 +13,6 @@ export function Dashboard() {
 
   return (
     <div className="space-y-12 pb-12">
-      {/* Hero Section */}
       <section className="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-3xl p-8 md:p-12 text-white shadow-xl relative overflow-hidden">
         <div className="absolute top-0 right-0 -mt-16 -mr-16 text-white/10">
           <Target className="w-64 h-64" />
@@ -49,7 +48,6 @@ export function Dashboard() {
         </div>
       </section>
 
-      {/* Progress Overview */}
       <section className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 flex items-center gap-4">
           <div className="p-4 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 rounded-xl">
@@ -80,7 +78,6 @@ export function Dashboard() {
         </div>
       </section>
 
-      {/* Study Roadmap */}
       <section>
         <h2 className="text-2xl font-bold mb-8 text-gray-900 dark:text-white flex items-center gap-2">
           <Target className="w-6 h-6 text-blue-500" />

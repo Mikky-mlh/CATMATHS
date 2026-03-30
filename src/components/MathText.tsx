@@ -4,7 +4,6 @@ import { InlineMath, BlockMath } from 'react-katex';
 export function MathText({ text }: { text: string | React.ReactNode }) {
   if (typeof text !== 'string') return <>{text}</>;
 
-  // Split by $$...$$ first, then $...$
   const parts = text.split(/(\$\$[\s\S]*?\$\$|\$[\s\S]*?\$)/g);
 
   return (

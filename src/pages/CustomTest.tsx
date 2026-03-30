@@ -30,20 +30,17 @@ export function CustomTest() {
     setGeneratedQuestions([]);
 
     try {
-      // Support multiple API keys separated by comma
       const apiKeysString = process.env.GEMINI_API_KEY;
       if (!apiKeysString || apiKeysString === 'MY_GEMINI_API_KEY') {
         throw new Error('Please configure your Gemini API Key for CATMATHS components.');
       }
 
-      // Split by comma and trim whitespace
       const apiKeys = apiKeysString.split(',').map(key => key.trim()).filter(key => key.length > 0);
       
       if (apiKeys.length === 0) {
         throw new Error('No valid API keys found.');
       }
 
-      // Rotate through API keys
       const apiKey = apiKeys[currentApiKeyIndex % apiKeys.length];
       setCurrentApiKeyIndex(prev => (prev + 1) % apiKeys.length);
       
@@ -65,7 +62,6 @@ export function CustomTest() {
       
       Return ONLY the JSON array, nothing else.`;
 
-      // First, get list of available models
       const listResponse = await fetch(
         `https://generativelanguage.googleapis.com/v1/models?key=${apiKey}`
       );
@@ -77,7 +73,6 @@ export function CustomTest() {
       const modelsList = await listResponse.json();
       console.log('Available models:', modelsList);
 
-      // Find a suitable model that supports generateContent
       const suitableModel = modelsList.models?.find((m: any) => 
         m.supportedGenerationMethods?.includes('generateContent') &&
         (m.name.includes('gemini') || m.name.includes('text'))
@@ -91,7 +86,6 @@ export function CustomTest() {
       const modelName = suitableModel.name.replace('models/', '');
       console.log('Using model:', modelName);
 
-      // Use direct fetch API to avoid SDK version issues
       const response = await fetch(
         `https://generativelanguage.googleapis.com/v1/models/${modelName}:generateContent?key=${apiKey}`,
         {
@@ -121,22 +115,15 @@ export function CustomTest() {
       
       console.log('Raw AI response:', responseText);
       
-      // Extract JSON from markdown code blocks if present
       let jsonText = responseText.trim();
       
-      // Remove markdown code blocks
       if (jsonText.startsWith('```')) {
-        // Remove opening ```json or ```
         jsonText = jsonText.replace(/^```(?:json)?\s*\n?/i, '');
-        // Remove closing ```
         jsonText = jsonText.replace(/\n?```\s*$/, '');
       }
       
-      // Trim again after removing code blocks
       jsonText = jsonText.trim();
       
-      // Fix common JSON issues
-      // Replace HTML entities that might have been introduced
       jsonText = jsonText.replace(/&quot;/g, '"');
       jsonText = jsonText.replace(/&#39;/g, "'");
       jsonText = jsonText.replace(/&lt;/g, '<');
