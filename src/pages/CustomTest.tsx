@@ -11,6 +11,7 @@ export function CustomTest() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [generatedQuestions, setGeneratedQuestions] = useState<QuizQuestion[]>([]);
+  const [currentApiKeyIndex, setCurrentApiKeyIndex] = useState(0);
 
   const toggleTopic = (id: string) => {
     setSelectedTopics(prev => 
@@ -29,10 +30,24 @@ export function CustomTest() {
     setGeneratedQuestions([]);
 
     try {
-      const apiKey = process.env.GEMINI_API_KEY;
-      if (!apiKey || apiKey === 'MY_GEMINI_API_KEY') {
+      // Support multiple API keys separated by comma
+      const apiKeysString = process.env.GEMINI_API_KEY;
+      if (!apiKeysString || apiKeysString === 'MY_GEMINI_API_KEY') {
         throw new Error('Please configure your Gemini API Key for CATMATHS components.');
       }
+
+      // Split by comma and trim whitespace
+      const apiKeys = apiKeysString.split(',').map(key => key.trim()).filter(key => key.length > 0);
+      
+      if (apiKeys.length === 0) {
+        throw new Error('No valid API keys found.');
+      }
+
+      // Rotate through API keys
+      const apiKey = apiKeys[currentApiKeyIndex % apiKeys.length];
+      setCurrentApiKeyIndex(prev => (prev + 1) % apiKeys.length);
+      
+      console.log(`Using API key ${currentApiKeyIndex % apiKeys.length + 1} of ${apiKeys.length}`);
 
       const topicNames = selectedTopics
         .map(id => allTopics.find(t => t.id === id)?.title)
