@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { GoogleGenerativeAI, SchemaType } from '@google/generative-ai';
 import { BrainCircuit, Loader2, AlertCircle } from 'lucide-react';
 import { getAllTopics, QuizQuestion } from '../data/syllabus';
 import { QuizEngine } from '../components/QuizEngine';
@@ -35,45 +34,110 @@ export function CustomTest() {
         throw new Error('Please configure your Gemini API Key for CATMATHS components.');
       }
 
-      const ai = new GoogleGenerativeAI(apiKey);
       const topicNames = selectedTopics
         .map(id => allTopics.find(t => t.id === id)?.title)
         .filter(Boolean)
         .join(', ');
 
       const prompt = `Generate a CAT-level math practice test with ${numQuestions} questions covering these topics: ${topicNames}.
-      Return a JSON array of objects. Each object must have:
+      Return ONLY a valid JSON array (no markdown, no code blocks) of objects. Each object must have:
       - id: a unique number
       - type: either "mcq" or "tita"
       - question: the question text. Use $...$ for inline math and $$...$$ for block math.
       - options: an array of 4 string options (only if type is "mcq", otherwise empty array [])
       - correctAnswer: the exact string of the correct option (for mcq) or the exact numerical answer (for tita)
-      - solution: step-by-step explanation. Use $...$ for inline math and $$...$$ for block math.`;
+      - solution: step-by-step explanation. Use $...$ for inline math and $$...$$ for block math.
+      
+      Return ONLY the JSON array, nothing else.`;
 
-      const model = ai.getGenerativeModel({
-        model: 'gemini-2.0-flash-exp',
-        generationConfig: {
-          responseMimeType: 'application/json',
-          responseSchema: {
-            type: SchemaType.ARRAY,
-            items: {
-              type: SchemaType.OBJECT,
-              properties: {
-                id: { type: SchemaType.INTEGER },
-                type: { type: SchemaType.STRING },
-                question: { type: SchemaType.STRING },
-                options: { type: SchemaType.ARRAY, items: { type: SchemaType.STRING } },
-                correctAnswer: { type: SchemaType.STRING },
-                solution: { type: SchemaType.STRING }
-              },
-              required: ["id", "type", "question", "options", "correctAnswer", "solution"]
+      // First, get list of available models
+      const listResponse = await fetch(
+        `https://generativelanguage.googleapis.com/v1/models?key=${apiKey}`
+      );
+
+      if (!listResponse.ok) {
+        throw new Error('Failed to fetch available models. Check your API key.');
+      }
+
+      const modelsList = await listResponse.json();
+      console.log('Available models:', modelsList);
+
+      // Find a suitable model that supports generateContent
+      const suitableModel = modelsList.models?.find((m: any) => 
+        m.supportedGenerationMethods?.includes('generateContent') &&
+        (m.name.includes('gemini') || m.name.includes('text'))
+      );
+
+      if (!suitableModel) {
+        throw new Error('No suitable model found for your API key. Available models: ' + 
+          modelsList.models?.map((m: any) => m.name).join(', '));
+      }
+
+      const modelName = suitableModel.name.replace('models/', '');
+      console.log('Using model:', modelName);
+
+      // Use direct fetch API to avoid SDK version issues
+      const response = await fetch(
+        `https://generativelanguage.googleapis.com/v1/models/${modelName}:generateContent?key=${apiKey}`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            contents: [{
+              parts: [{ text: prompt }]
+            }],
+            generationConfig: {
+              temperature: 0.7,
+              maxOutputTokens: 4096,
             }
-          }
+          })
         }
-      });
+      );
 
-      const response = await model.generateContent(prompt);
-      const data = JSON.parse(response.response.text() || '[]');
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error?.message || `API Error: ${response.status}`);
+      }
+
+      const result = await response.json();
+      const responseText = result.candidates[0].content.parts[0].text;
+      
+      console.log('Raw AI response:', responseText);
+      
+      // Extract JSON from markdown code blocks if present
+      let jsonText = responseText.trim();
+      
+      // Remove markdown code blocks
+      if (jsonText.startsWith('```')) {
+        // Remove opening ```json or ```
+        jsonText = jsonText.replace(/^```(?:json)?\s*\n?/i, '');
+        // Remove closing ```
+        jsonText = jsonText.replace(/\n?```\s*$/, '');
+      }
+      
+      // Trim again after removing code blocks
+      jsonText = jsonText.trim();
+      
+      // Fix common JSON issues
+      // Replace HTML entities that might have been introduced
+      jsonText = jsonText.replace(/&quot;/g, '"');
+      jsonText = jsonText.replace(/&#39;/g, "'");
+      jsonText = jsonText.replace(/&lt;/g, '<');
+      jsonText = jsonText.replace(/&gt;/g, '>');
+      jsonText = jsonText.replace(/&amp;/g, '&');
+      
+      console.log('Extracted JSON:', jsonText);
+      
+      let data;
+      try {
+        data = JSON.parse(jsonText);
+      } catch (parseError: any) {
+        console.error('JSON Parse Error:', parseError);
+        console.error('Failed JSON text:', jsonText);
+        throw new Error('Failed to parse AI response. The AI returned invalid JSON. Please try again.');
+      }
       
       const formattedQuestions: QuizQuestion[] = data.map((q: any) => {
         let correct: number | string = q.correctAnswer;
