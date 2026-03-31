@@ -26,44 +26,44 @@ export interface Module {
 
 // Tactical Coach Components
 export const WhyCATCares = ({ children }: { children: React.ReactNode }) => (
-  <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-xl border-l-4 border-blue-500 mb-6">
-    <h4 className="flex items-center gap-2 font-bold text-blue-800 dark:text-blue-300 mb-1">
+  <div className="callout callout-info">
+    <h4>
       <Target className="w-4 h-4" /> Why This Matters for CAT
     </h4>
-    <div className="text-sm text-blue-700 dark:text-blue-400 italic">
+    <div className="italic">
       {children}
     </div>
   </div>
 );
 
 export const HowToSpot = ({ children }: { children: React.ReactNode }) => (
-  <div className="p-4 bg-amber-50 dark:bg-amber-900/20 rounded-xl border-l-4 border-amber-500 mb-6">
-    <h4 className="flex items-center gap-2 font-bold text-amber-800 dark:text-amber-300 mb-1">
+  <div className="callout callout-tip">
+    <h4>
       <BrainCircuit className="w-4 h-4" /> How to Spot This Question
     </h4>
-    <div className="text-sm text-amber-700 dark:text-amber-400">
+    <div>
       {children}
     </div>
   </div>
 );
 
 export const CommonTraps = ({ children }: { children: React.ReactNode }) => (
-  <div className="p-4 bg-red-50 dark:bg-red-900/20 rounded-xl border-l-4 border-red-500 mb-6">
-    <h4 className="flex items-center gap-2 font-bold text-red-800 dark:text-red-300 mb-1">
+  <div className="callout callout-trap">
+    <h4>
       <Zap className="w-4 h-4" /> Common Traps
     </h4>
-    <div className="text-sm text-red-700 dark:text-red-400">
+    <div>
       {children}
     </div>
   </div>
 );
 
 export const Shortcut = ({ children }: { children: React.ReactNode }) => (
-  <div className="p-4 bg-emerald-50 dark:bg-emerald-900/20 rounded-xl border-l-4 border-emerald-500 mb-6">
-    <h4 className="flex items-center gap-2 font-bold text-emerald-800 dark:text-emerald-300 mb-1">
+  <div className="callout callout-shortcut">
+    <h4>
       <Zap className="w-4 h-4 animate-pulse" /> Time-Saving Shortcut
     </h4>
-    <div className="text-sm text-emerald-700 dark:text-emerald-400">
+    <div>
       {children}
     </div>
   </div>

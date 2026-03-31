@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useParams, Navigate, Link } from 'react-router-dom';
 import { ChevronRight, Home, CheckCircle2, ArrowRight, ArrowLeft } from 'lucide-react';
 import { getTopicById, getAllTopics } from '../data/syllabus';
@@ -9,11 +9,11 @@ import { cn } from '../lib/utils';
 export function TopicPage() {
   const { topicId } = useParams<{ topicId: string }>();
   const { completedTopics, markComplete } = useProgressStore();
-  
+
   const allTopics = getAllTopics();
   const topicIndex = allTopics.findIndex(t => t.id === topicId);
   const topic = allTopics[topicIndex];
-  
+
   const prevTopic = topicIndex > 0 ? allTopics[topicIndex - 1] : null;
   const nextTopic = topicIndex < allTopics.length - 1 ? allTopics[topicIndex + 1] : null;
 
@@ -28,68 +28,82 @@ export function TopicPage() {
   const isCompleted = completedTopics[topic.id];
 
   return (
-    <div className="space-y-8 pb-12 animate-in fade-in duration-500">
-      <nav className="flex items-center text-sm font-medium text-gray-500 dark:text-gray-400">
-        <Link to="/" className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors flex items-center gap-1">
-          <Home className="w-4 h-4" />
+    <div className="space-y-8 pb-12 animate-in fade-in">
+      {/* --- Breadcrumbs --- */}
+      <nav className="breadcrumbs" aria-label="Breadcrumb">
+        <Link to="/" className="flex items-center gap-1">
+          <Home className="w-3.5 h-3.5" />
           Home
         </Link>
-        <ChevronRight className="w-4 h-4 mx-2" />
-        <span className="text-gray-900 dark:text-gray-200">{topic.moduleTitle}</span>
-        <ChevronRight className="w-4 h-4 mx-2" />
-        <span className="text-blue-600 dark:text-blue-400 truncate max-w-[200px] md:max-w-none">
+        <ChevronRight className="w-3.5 h-3.5 text-line" />
+        <span>{topic.moduleTitle}</span>
+        <ChevronRight className="w-3.5 h-3.5 text-line" />
+        <span className="current truncate max-w-[200px] md:max-w-none">
           {topic.title}
         </span>
       </nav>
 
-      <header className="border-b border-gray-200 dark:border-gray-700 pb-8">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <h1 className="text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-white tracking-tight">
-            {topic.title}
-          </h1>
+      {/* --- Header --- */}
+      <header className="border-b border-line pb-8 space-y-4">
+        <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
+          <div>
+            <p className="text-xs font-body font-semibold text-ink-muted uppercase tracking-[0.1em] mb-2">
+              {topic.moduleTitle}
+            </p>
+            <h1 className="font-display text-3xl md:text-4xl text-ink tracking-[-0.03em] leading-[1.1]">
+              {topic.title}
+            </h1>
+          </div>
           <button
             onClick={() => markComplete(topic.id)}
             className={cn(
-              "flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-bold transition-all shadow-sm",
-              isCompleted 
-                ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800"
-                : "bg-blue-600 hover:bg-blue-700 text-white"
+              'btn btn-stamp flex items-center gap-2 text-sm shrink-0',
+              isCompleted
+                ? 'completed'
+                : 'bg-surface border border-line hover:border-primary text-ink'
             )}
           >
-            <CheckCircle2 className="w-5 h-5" />
-            {isCompleted ? 'Completed' : 'Mark as Complete'}
+            <CheckCircle2 className="w-4 h-4" />
+            {isCompleted ? 'Completed' : 'Mark Complete'}
           </button>
         </div>
       </header>
 
-      <article className="prose prose-blue dark:prose-invert max-w-none">
+      {/* --- Lesson Content --- */}
+      <article className="lesson-content">
         {topic.content}
       </article>
 
-      <section className="pt-12 border-t border-gray-200 dark:border-gray-700">
-        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
-          <span className="text-3xl">✏️</span> Practice Questions
+      {/* --- Practice Questions --- */}
+      <section className="pt-12 border-t border-line">
+        <h2 className="font-display text-2xl text-ink mb-6">
+          Practice Questions
         </h2>
-        <QuizEngine 
-          questions={topic.quiz} 
+        <QuizEngine
+          questions={topic.quiz}
           onComplete={(score, total) => {
             if (score / total >= 0.5) {
               markComplete(topic.id);
             }
-          }} 
+          }}
         />
       </section>
 
-      <nav className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-gray-200 dark:border-gray-700">
+      {/* --- Prev / Next Navigation --- */}
+      <nav className="pt-8 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 border-t border-line">
         {prevTopic ? (
           <Link
             to={`/topic/${prevTopic.id}`}
-            className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-4 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-700 rounded-xl font-medium transition-colors text-gray-600 dark:text-gray-300"
+            className="flex items-center gap-3 px-5 py-4 card hover:bg-surface-alt transition-colors group flex-1 sm:flex-none"
           >
-            <ArrowLeft className="w-5 h-5" />
+            <ArrowLeft className="w-4 h-4 text-ink-muted group-hover:text-primary transition-colors" />
             <div className="text-left">
-              <div className="text-xs text-gray-400 uppercase tracking-wider">Previous</div>
-              <div className="truncate max-w-[150px]">{prevTopic.title}</div>
+              <div className="text-xs text-ink-muted uppercase tracking-[0.08em] font-body font-semibold">
+                Previous
+              </div>
+              <div className="text-sm font-body font-medium text-ink truncate max-w-[180px]">
+                {prevTopic.title}
+              </div>
             </div>
           </Link>
         ) : <div />}
@@ -97,13 +111,17 @@ export function TopicPage() {
         {nextTopic && (
           <Link
             to={`/topic/${nextTopic.id}`}
-            className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-4 bg-blue-50 dark:bg-blue-900/20 hover:bg-blue-100 dark:hover:bg-blue-900/40 border border-blue-200 dark:border-blue-800 rounded-xl font-medium transition-colors text-blue-700 dark:text-blue-300"
+            className="flex items-center justify-end gap-3 px-5 py-4 card hover:bg-surface-alt border-secondary/30 transition-colors group flex-1 sm:flex-none"
           >
             <div className="text-right">
-              <div className="text-xs text-blue-400 uppercase tracking-wider">Next Topic</div>
-              <div className="truncate max-w-[150px]">{nextTopic.title}</div>
+              <div className="text-xs text-secondary uppercase tracking-[0.08em] font-body font-semibold">
+                Next Topic
+              </div>
+              <div className="text-sm font-body font-medium text-ink truncate max-w-[180px]">
+                {nextTopic.title}
+              </div>
             </div>
-            <ArrowRight className="w-5 h-5" />
+            <ArrowRight className="w-4 h-4 text-secondary group-hover:translate-x-1 transition-transform" />
           </Link>
         )}
       </nav>

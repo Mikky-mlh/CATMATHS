@@ -9,6 +9,8 @@ interface QuizEngineProps {
   onComplete?: (score: number, total: number) => void;
 }
 
+const OPTION_LETTERS = ['A', 'B', 'C', 'D', 'E', 'F'];
+
 export function QuizEngine({ questions, onComplete }: QuizEngineProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
@@ -19,21 +21,23 @@ export function QuizEngine({ questions, onComplete }: QuizEngineProps) {
 
   if (!questions || questions.length === 0) {
     return (
-      <div className="p-6 bg-gray-50 dark:bg-gray-800/50 rounded-xl text-center text-gray-500">
-        No practice questions available for this topic yet.
+      <div className="p-8 bg-surface-alt rounded-xl text-center">
+        <p className="text-ink-muted font-body italic font-display text-lg">
+          No practice questions available for this topic yet.
+        </p>
       </div>
     );
   }
 
   const currentQuestion = questions[currentIndex];
-  const isCorrect = currentQuestion.type === 'mcq' 
+  const isCorrect = currentQuestion.type === 'mcq'
     ? selectedOption === currentQuestion.correct
     : titaAnswer.trim() === String(currentQuestion.correct).trim();
 
   const handleSubmit = (e?: React.FormEvent) => {
     if (e) e.preventDefault();
     if (isSubmitted) return;
-    
+
     if (currentQuestion.type === 'mcq' && selectedOption === null) return;
     if (currentQuestion.type === 'tita' && !titaAnswer.trim()) return;
 
@@ -62,64 +66,132 @@ export function QuizEngine({ questions, onComplete }: QuizEngineProps) {
     setIsFinished(false);
   };
 
+  // --- Completion Screen ---
   if (isFinished) {
-    const percentage = Math.round((score / questions.length) * 100);
+    const finalScore = score;
+    const percentage = Math.round((finalScore / questions.length) * 100);
+    const isPassing = percentage >= 50;
+
     return (
-      <div className="p-8 bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 text-center">
-        <h3 className="text-2xl font-bold mb-2">Quiz Completed!</h3>
-        <div className="text-6xl font-black text-blue-600 dark:text-blue-400 my-6">
+      <div className="card p-8 text-center space-y-6">
+        <h3 className="font-display text-2xl text-ink">Quiz Complete</h3>
+        <div className={cn(
+          'text-6xl font-display tabular-nums',
+          isPassing ? 'text-success' : 'text-error'
+        )}>
           {percentage}%
         </div>
-        <p className="text-gray-600 dark:text-gray-300 mb-8">
-          You scored {score} out of {questions.length} correct.
+        <p className="text-ink-secondary font-body">
+          You scored <span className="font-semibold text-ink">{finalScore}</span> out of{' '}
+          <span className="font-semibold text-ink">{questions.length}</span> correct.
         </p>
         <button
           onClick={handleRestart}
-          className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors"
+          className="btn btn-secondary"
         >
-          <RefreshCw className="w-5 h-5" />
+          <RefreshCw className="w-4 h-4" />
           Retake Quiz
         </button>
       </div>
     );
   }
 
+  // --- Quiz Progress Dots ---
+  const renderDots = () => {
+    // For 10 or fewer questions, show all dots
+    if (questions.length <= 10) {
+      return questions.map((_, i) => (
+        <span
+          key={i}
+          className={cn(
+            'quiz-dot',
+            i === currentIndex && 'current',
+            i < currentIndex && 'done'
+          )}
+        />
+      ));
+    }
+
+    // For 11+ questions, show current ± 2 with ellipsis
+    const dots: React.ReactNode[] = [];
+    const start = Math.max(0, currentIndex - 2);
+    const end = Math.min(questions.length - 1, currentIndex + 2);
+
+    if (start > 0) {
+      dots.push(<span key="start-ellipsis" className="text-xs text-ink-muted font-mono">...</span>);
+    }
+
+    for (let i = start; i <= end; i++) {
+      dots.push(
+        <span
+          key={i}
+          className={cn(
+            'quiz-dot',
+            i === currentIndex && 'current',
+            i < currentIndex && 'done'
+          )}
+        />
+      );
+    }
+
+    if (end < questions.length - 1) {
+      dots.push(<span key="end-ellipsis" className="text-xs text-ink-muted font-mono">...</span>);
+    }
+
+    return dots;
+  };
+
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
-      <div className="p-4 bg-gray-50 dark:bg-gray-800/80 border-b border-gray-100 dark:border-gray-700 flex justify-between items-center">
-        <span className="font-semibold text-gray-600 dark:text-gray-300">
-          Question {currentIndex + 1} of {questions.length}
-        </span>
-        <span className="text-sm px-3 py-1 bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300 rounded-full font-medium">
-          {currentQuestion.type === 'mcq' ? 'Multiple Choice' : 'Type in the Answer'}
-        </span>
+    <div className="card overflow-hidden">
+      {/* --- Header Bar --- */}
+      <div className="p-4 bg-surface-alt border-b border-line-light flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <span className="font-body font-semibold text-ink-secondary text-sm">
+            Question {currentIndex + 1}
+            <span className="text-ink-muted font-normal"> of {questions.length}</span>
+          </span>
+        </div>
+
+        <div className="flex items-center gap-3">
+          {/* Progress dots (hide on very small screens for 11+ questions) */}
+          <div className="quiz-dots hidden sm:flex">
+            {renderDots()}
+          </div>
+          {/* Mobile: text fallback */}
+          <span className="sm:hidden text-xs font-mono text-ink-muted tabular-nums">
+            {currentIndex + 1}/{questions.length}
+          </span>
+
+          <span className="text-xs px-2.5 py-1 bg-surface border border-line rounded-md font-body font-medium text-ink-muted uppercase tracking-[0.06em]">
+            {currentQuestion.type === 'mcq' ? 'MCQ' : 'TITA'}
+          </span>
+        </div>
       </div>
 
+      {/* --- Question Body --- */}
       <div className="p-6 md:p-8">
-        <h4 className="text-lg md:text-xl font-medium mb-6 leading-relaxed">
+        <h4 className="text-lg font-body font-medium text-ink mb-6 leading-relaxed" style={{ maxWidth: '65ch' }}>
           <MathText text={currentQuestion.question} />
         </h4>
 
+        {/* MCQ Options */}
         {currentQuestion.type === 'mcq' ? (
           <div className="space-y-3">
             {currentQuestion.options?.map((option, idx) => {
               const isSelected = selectedOption === idx;
               const isCorrectOption = currentQuestion.correct === idx;
-              
-              let optionClasses = "w-full text-left p-4 rounded-xl border-2 transition-all ";
-              
-              if (!isSubmitted) {
-                optionClasses += isSelected 
-                  ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300" 
-                  : "border-gray-200 dark:border-gray-700 hover:border-blue-300 dark:hover:border-blue-700";
-              } else {
+
+              let optionState = '';
+              if (isSubmitted) {
                 if (isCorrectOption) {
-                  optionClasses += "border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-300";
+                  optionState = 'correct';
                 } else if (isSelected && !isCorrectOption) {
-                  optionClasses += "border-red-500 bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-300";
+                  optionState = 'incorrect';
                 } else {
-                  optionClasses += "border-gray-200 dark:border-gray-700 opacity-50";
+                  optionState = 'faded';
                 }
+              } else if (isSelected) {
+                optionState = 'selected';
               }
 
               return (
@@ -127,18 +199,26 @@ export function QuizEngine({ questions, onComplete }: QuizEngineProps) {
                   key={idx}
                   disabled={isSubmitted}
                   onClick={() => setSelectedOption(idx)}
-                  className={optionClasses}
+                  className={cn('quiz-option', optionState)}
                 >
-                  <div className="flex items-center justify-between">
-                    <span><MathText text={option} /></span>
-                    {isSubmitted && isCorrectOption && <CheckCircle2 className="w-5 h-5 text-emerald-500" />}
-                    {isSubmitted && isSelected && !isCorrectOption && <XCircle className="w-5 h-5 text-red-500" />}
-                  </div>
+                  <span className="quiz-letter">
+                    {isSubmitted && isCorrectOption ? (
+                      <CheckCircle2 className="w-4 h-4 text-white" />
+                    ) : isSubmitted && isSelected && !isCorrectOption ? (
+                      <XCircle className="w-4 h-4 text-white" />
+                    ) : (
+                      OPTION_LETTERS[idx]
+                    )}
+                  </span>
+                  <span className="flex-1">
+                    <MathText text={option} />
+                  </span>
                 </button>
               );
             })}
           </div>
         ) : (
+          /* TITA Input */
           <form onSubmit={handleSubmit} className="space-y-4">
             <input
               type="text"
@@ -147,49 +227,61 @@ export function QuizEngine({ questions, onComplete }: QuizEngineProps) {
               disabled={isSubmitted}
               placeholder="Type your answer here..."
               className={cn(
-                "w-full p-4 text-lg rounded-xl border-2 bg-transparent transition-colors focus:outline-none",
-                !isSubmitted 
-                  ? "border-gray-300 dark:border-gray-600 focus:border-blue-500" 
-                  : isCorrect 
-                    ? "border-emerald-500 text-emerald-700 dark:text-emerald-400" 
-                    : "border-red-500 text-red-700 dark:text-red-400"
+                'w-full p-4 text-lg rounded-xl border-2 bg-transparent font-mono transition-colors focus:outline-none',
+                !isSubmitted
+                  ? 'border-line focus:border-primary'
+                  : isCorrect
+                    ? 'border-success text-success'
+                    : 'border-error text-error'
               )}
             />
             {isSubmitted && (
-              <div className="flex items-center gap-2 font-medium">
+              <div className="flex items-center gap-2 font-body font-medium">
                 {isCorrect ? (
-                  <span className="text-emerald-600 flex items-center gap-1"><CheckCircle2 className="w-5 h-5"/> Correct!</span>
+                  <span className="text-success flex items-center gap-1">
+                    <CheckCircle2 className="w-5 h-5" /> Correct!
+                  </span>
                 ) : (
-                  <span className="text-red-600 flex items-center gap-1"><XCircle className="w-5 h-5"/> Incorrect. The correct answer is {currentQuestion.correct}</span>
+                  <span className="text-error flex items-center gap-1">
+                    <XCircle className="w-5 h-5" /> Incorrect. The correct answer is{' '}
+                    <span className="font-mono font-semibold">{currentQuestion.correct}</span>
+                  </span>
                 )}
               </div>
             )}
           </form>
         )}
 
+        {/* --- Action Area --- */}
         <div className="mt-8">
           {!isSubmitted ? (
             <button
               onClick={() => handleSubmit()}
-              disabled={currentQuestion.type === 'mcq' ? selectedOption === null : !titaAnswer.trim()}
-              className="w-full md:w-auto px-8 py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white rounded-lg font-medium transition-colors"
+              disabled={
+                currentQuestion.type === 'mcq'
+                  ? selectedOption === null
+                  : !titaAnswer.trim()
+              }
+              className="btn btn-primary disabled:opacity-40 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-none"
             >
               Check Answer
             </button>
           ) : (
-            <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-              <div className="p-6 bg-blue-50 dark:bg-blue-900/20 rounded-xl border border-blue-100 dark:border-blue-800">
-                <h5 className="font-bold text-blue-800 dark:text-blue-300 mb-2">Solution:</h5>
-                <div className="text-gray-700 dark:text-gray-300 leading-relaxed">
+            <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4">
+              {/* Solution callout */}
+              <div className="callout callout-info">
+                <h4>Solution</h4>
+                <div className="leading-relaxed font-body">
                   <MathText text={currentQuestion.solution} />
                 </div>
               </div>
+
               <button
                 onClick={handleNext}
-                className="w-full md:w-auto flex items-center justify-center gap-2 px-8 py-3 bg-gray-900 dark:bg-white text-white dark:text-gray-900 hover:bg-gray-800 dark:hover:bg-gray-100 rounded-lg font-medium transition-colors"
+                className="btn bg-ink text-surface hover:opacity-90"
               >
                 {currentIndex < questions.length - 1 ? 'Next Question' : 'Finish Quiz'}
-                <ChevronRight className="w-5 h-5" />
+                <ChevronRight className="w-4 h-4" />
               </button>
             </div>
           )}
