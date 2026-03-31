@@ -11,7 +11,6 @@ export function CustomTest() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [generatedQuestions, setGeneratedQuestions] = useState<QuizQuestion[]>([]);
-  const [currentApiKeyIndex, setCurrentApiKeyIndex] = useState(0);
 
   const toggleTopic = (id: string) => {
     setSelectedTopics(prev => 
@@ -30,21 +29,10 @@ export function CustomTest() {
     setGeneratedQuestions([]);
 
     try {
-      const apiKeysString = process.env.GEMINI_API_KEY;
-      if (!apiKeysString || apiKeysString === 'MY_GEMINI_API_KEY') {
-        throw new Error('Please configure your Gemini API Key for CATMATHS components.');
+      const apiKey = process.env.GROQ_API_KEY;
+      if (!apiKey || apiKey === 'MY_GROQ_API_KEY') {
+        throw new Error('Please configure your GROQ API Key for CATMATHS components.');
       }
-
-      const apiKeys = apiKeysString.split(',').map(key => key.trim()).filter(key => key.length > 0);
-      
-      if (apiKeys.length === 0) {
-        throw new Error('No valid API keys found.');
-      }
-
-      const apiKey = apiKeys[currentApiKeyIndex % apiKeys.length];
-      setCurrentApiKeyIndex(prev => (prev + 1) % apiKeys.length);
-      
-      console.log(`Using API key ${currentApiKeyIndex % apiKeys.length + 1} of ${apiKeys.length}`);
 
       const topicNames = selectedTopics
         .map(id => allTopics.find(t => t.id === id)?.title)
@@ -52,55 +40,61 @@ export function CustomTest() {
         .join(', ');
 
       const prompt = `Generate a CAT-level math practice test with ${numQuestions} questions covering these topics: ${topicNames}.
-      Return ONLY a valid JSON array (no markdown, no code blocks) of objects. Each object must have:
-      - id: a unique number
-      - type: either "mcq" or "tita"
-      - question: the question text. Use $...$ for inline math and $$...$$ for block math.
-      - options: an array of 4 string options (only if type is "mcq", otherwise empty array [])
-      - correctAnswer: the exact string of the correct option (for mcq) or the exact numerical answer (for tita)
-      - solution: step-by-step explanation. Use $...$ for inline math and $$...$$ for block math.
-      
-      Return ONLY the JSON array, nothing else.`;
 
-      const listResponse = await fetch(
-        `https://generativelanguage.googleapis.com/v1/models?key=${apiKey}`
-      );
+IMPORTANT: Return ONLY a valid JSON array. No explanations, no markdown, no code blocks.
 
-      if (!listResponse.ok) {
-        throw new Error('Failed to fetch available models. Check your API key.');
-      }
+Format:
+[
+  {
+    "id": 1,
+    "type": "mcq",
+    "question": "Question text here. Use $x^2$ for inline math.",
+    "options": ["Option 1", "Option 2", "Option 3", "Option 4"],
+    "correctAnswer": "Option 1",
+    "solution": "Step-by-step solution. Use $x^2$ for inline math."
+  },
+  {
+    "id": 2,
+    "type": "tita",
+    "question": "Question text here.",
+    "options": [],
+    "correctAnswer": "42",
+    "solution": "Step-by-step solution."
+  }
+]
 
-      const modelsList = await listResponse.json();
-      console.log('Available models:', modelsList);
+Rules:
+- Use double quotes for all strings
+- No trailing commas
+- correctAnswer must be a string
+- For mcq: correctAnswer must exactly match one option
+- For tita: correctAnswer must be the numerical answer as a string
+- Use $...$ for inline math, $$...$$ for block math
 
-      const suitableModel = modelsList.models?.find((m: any) => 
-        m.supportedGenerationMethods?.includes('generateContent') &&
-        (m.name.includes('gemini') || m.name.includes('text'))
-      );
-
-      if (!suitableModel) {
-        throw new Error('No suitable model found for your API key. Available models: ' + 
-          modelsList.models?.map((m: any) => m.name).join(', '));
-      }
-
-      const modelName = suitableModel.name.replace('models/', '');
-      console.log('Using model:', modelName);
+Return ONLY the JSON array, starting with [ and ending with ].`;
 
       const response = await fetch(
-        `https://generativelanguage.googleapis.com/v1/models/${modelName}:generateContent?key=${apiKey}`,
+        'https://api.groq.com/openai/v1/chat/completions',
         {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+            'Authorization': `Bearer ${apiKey}`
           },
           body: JSON.stringify({
-            contents: [{
-              parts: [{ text: prompt }]
-            }],
-            generationConfig: {
-              temperature: 0.7,
-              maxOutputTokens: 4096,
-            }
+            model: 'llama-3.3-70b-versatile',
+            messages: [
+              {
+                role: 'system',
+                content: 'You are a CAT exam question generator. You MUST respond with ONLY valid JSON. No explanations, no markdown, no code blocks. Just pure JSON starting with [ and ending with ].'
+              },
+              {
+                role: 'user',
+                content: prompt
+              }
+            ],
+            temperature: 0.5,
+            max_tokens: 4096
           })
         }
       );
@@ -111,12 +105,13 @@ export function CustomTest() {
       }
 
       const result = await response.json();
-      const responseText = result.candidates[0].content.parts[0].text;
+      const responseText = result.choices[0].message.content;
       
       console.log('Raw AI response:', responseText);
       
       let jsonText = responseText.trim();
       
+      // Remove markdown code blocks
       if (jsonText.startsWith('```')) {
         jsonText = jsonText.replace(/^```(?:json)?\s*\n?/i, '');
         jsonText = jsonText.replace(/\n?```\s*$/, '');
@@ -124,11 +119,31 @@ export function CustomTest() {
       
       jsonText = jsonText.trim();
       
+      // Remove any text before the first [ or {
+      const jsonStart = Math.min(
+        jsonText.indexOf('[') !== -1 ? jsonText.indexOf('[') : Infinity,
+        jsonText.indexOf('{') !== -1 ? jsonText.indexOf('{') : Infinity
+      );
+      if (jsonStart !== Infinity && jsonStart > 0) {
+        jsonText = jsonText.substring(jsonStart);
+      }
+      
+      // Remove any text after the last ] or }
+      const lastBracket = Math.max(jsonText.lastIndexOf(']'), jsonText.lastIndexOf('}'));
+      if (lastBracket !== -1 && lastBracket < jsonText.length - 1) {
+        jsonText = jsonText.substring(0, lastBracket + 1);
+      }
+      
+      // Clean up HTML entities
       jsonText = jsonText.replace(/&quot;/g, '"');
       jsonText = jsonText.replace(/&#39;/g, "'");
       jsonText = jsonText.replace(/&lt;/g, '<');
       jsonText = jsonText.replace(/&gt;/g, '>');
       jsonText = jsonText.replace(/&amp;/g, '&');
+      
+      // Fix common JSON issues
+      jsonText = jsonText.replace(/,\s*([}\]])/g, '$1'); // Remove trailing commas
+      jsonText = jsonText.replace(/([{,])\s*([a-zA-Z_][a-zA-Z0-9_]*)\s*:/g, '$1"$2":'); // Quote unquoted keys
       
       console.log('Extracted JSON:', jsonText);
       
@@ -138,7 +153,16 @@ export function CustomTest() {
       } catch (parseError: any) {
         console.error('JSON Parse Error:', parseError);
         console.error('Failed JSON text:', jsonText);
-        throw new Error('Failed to parse AI response. The AI returned invalid JSON. Please try again.');
+        
+        // Try one more time with more aggressive cleaning
+        try {
+          // Remove all newlines and extra spaces
+          const cleanedJson = jsonText.replace(/\n/g, ' ').replace(/\s+/g, ' ');
+          data = JSON.parse(cleanedJson);
+          console.log('Successfully parsed after aggressive cleaning');
+        } catch (secondError) {
+          throw new Error('Failed to parse AI response. The AI returned invalid JSON. Please try again.');
+        }
       }
       
       const formattedQuestions: QuizQuestion[] = data.map((q: any) => {
