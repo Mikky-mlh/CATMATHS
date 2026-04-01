@@ -29,83 +29,24 @@ export function CustomTest() {
     setGeneratedQuestions([]);
 
     try {
-      const apiKey = process.env.GROQ_API_KEY;
-      if (!apiKey || apiKey === 'MY_GROQ_API_KEY') {
-        throw new Error('Please configure your GROQ API Key for CATMATHS components.');
-      }
-
       const topicNames = selectedTopics
         .map(id => allTopics.find(t => t.id === id)?.title)
         .filter(Boolean)
         .join(', ');
 
-      const prompt = `Generate a CAT-level math practice test with ${numQuestions} questions covering these topics: ${topicNames}.
-
-IMPORTANT: Return ONLY a valid JSON array. No explanations, no markdown, no code blocks.
-
-Format:
-[
-  {
-    "id": 1,
-    "type": "mcq",
-    "question": "Question text here. Use $x^2$ for inline math.",
-    "options": ["Option 1", "Option 2", "Option 3", "Option 4"],
-    "correctAnswer": "Option 1",
-    "solution": "Step-by-step solution. Use $x^2$ for inline math."
-  },
-  {
-    "id": 2,
-    "type": "tita",
-    "question": "Question text here.",
-    "options": [],
-    "correctAnswer": "42",
-    "solution": "Step-by-step solution."
-  }
-]
-
-Rules:
-- Use double quotes for all strings
-- No trailing commas
-- correctAnswer must be a string
-- For mcq: correctAnswer must exactly match one option
-- For tita: correctAnswer must be the numerical answer as a string
-- Use $...$ for inline math, $$...$$ for block math
-
-Return ONLY the JSON array, starting with [ and ending with ].`;
-
-      const response = await fetch(
-        'https://api.groq.com/openai/v1/chat/completions',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${apiKey}`
-          },
-          body: JSON.stringify({
-            model: 'llama-3.3-70b-versatile',
-            messages: [
-              {
-                role: 'system',
-                content: 'You are a CAT exam question generator. You MUST respond with ONLY valid JSON. No explanations, no markdown, no code blocks. Just pure JSON starting with [ and ending with ].'
-              },
-              {
-                role: 'user',
-                content: prompt
-              }
-            ],
-            temperature: 0.5,
-            max_tokens: 4096
-          })
-        }
-      );
+      const response = await fetch('/api/generate-questions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ topicNames, numQuestions })
+      });
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error?.message || `API Error: ${response.status}`);
+        throw new Error(errorData.error || `API Error: ${response.status}`);
       }
 
       const result = await response.json();
-      const responseText = result.choices[0].message.content;
+      const responseText = result.content;
 
       console.log('Raw AI response:', responseText);
 
