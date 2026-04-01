@@ -46,65 +46,61 @@ export function CustomTest() {
       }
 
       const result = await response.json();
-      const responseText = result.content;
+      let responseText = result.content;
 
       console.log('Raw AI response:', responseText);
 
-      let jsonText = responseText.trim();
-
       // Remove markdown code blocks
-      if (jsonText.startsWith('```')) {
-        jsonText = jsonText.replace(/^```(?:json)?\s*\n?/i, '');
-        jsonText = jsonText.replace(/\n?```\s*$/, '');
+      responseText = responseText.replace(/^```(?:json)?\s*\n?/i, '').replace(/\n?```\s*$/i, '');
+
+      // Try to find JSON object or array
+      const firstBrace = responseText.indexOf('{');
+      const firstBracket = responseText.indexOf('[');
+      const lastBrace = responseText.lastIndexOf('}');
+      const lastBracket = responseText.lastIndexOf(']');
+      
+      let jsonText = '';
+      
+      // Prefer object format {"questions": [...]}
+      if (firstBrace !== -1 && lastBrace !== -1 && firstBrace < lastBrace) {
+        jsonText = responseText.substring(firstBrace, lastBrace + 1);
+      } 
+      // Fallback to array format [...]
+      else if (firstBracket !== -1 && lastBracket !== -1 && firstBracket < lastBracket) {
+        jsonText = responseText.substring(firstBracket, lastBracket + 1);
+      } else {
+        throw new Error('AI response does not contain valid JSON. Please try again.');
       }
 
-      jsonText = jsonText.trim();
+      // Clean up common issues
+      jsonText = jsonText.trim()
+        .replace(/&quot;/g, '"')
+        .replace(/&#39;/g, "'")
+        .replace(/&lt;/g, '<')
+        .replace(/&gt;/g, '>')
+        .replace(/&amp;/g, '&')
+        .replace(/,\s*([}\]])/g, '$1')
+        .replace(/([{,])\s*([a-zA-Z_][a-zA-Z0-9_]*)\s*:/g, '$1"$2":');
 
-      // Remove any text before the first [ or {
-      const jsonStart = Math.min(
-        jsonText.indexOf('[') !== -1 ? jsonText.indexOf('[') : Infinity,
-        jsonText.indexOf('{') !== -1 ? jsonText.indexOf('{') : Infinity
-      );
-      if (jsonStart !== Infinity && jsonStart > 0) {
-        jsonText = jsonText.substring(jsonStart);
-      }
-
-      // Remove any text after the last ] or }
-      const lastBracket = Math.max(jsonText.lastIndexOf(']'), jsonText.lastIndexOf('}'));
-      if (lastBracket !== -1 && lastBracket < jsonText.length - 1) {
-        jsonText = jsonText.substring(0, lastBracket + 1);
-      }
-
-      // Clean up HTML entities
-      jsonText = jsonText.replace(/&quot;/g, '"');
-      jsonText = jsonText.replace(/&#39;/g, "'");
-      jsonText = jsonText.replace(/&lt;/g, '<');
-      jsonText = jsonText.replace(/&gt;/g, '>');
-      jsonText = jsonText.replace(/&amp;/g, '&');
-
-      // Fix common JSON issues
-      jsonText = jsonText.replace(/,\s*([}\]])/g, '$1');
-      jsonText = jsonText.replace(/([{,])\s*([a-zA-Z_][a-zA-Z0-9_]*)\s*:/g, '$1"$2":');
-
-      console.log('Extracted JSON:', jsonText);
+      console.log('Cleaned JSON:', jsonText);
 
       let data;
       try {
         data = JSON.parse(jsonText);
       } catch (parseError: any) {
-        console.error('JSON Parse Error:', parseError);
-        console.error('Failed JSON text:', jsonText);
-
-        try {
-          const cleanedJson = jsonText.replace(/\n/g, ' ').replace(/\s+/g, ' ');
-          data = JSON.parse(cleanedJson);
-          console.log('Successfully parsed after aggressive cleaning');
-        } catch (secondError) {
-          throw new Error('Failed to parse AI response. The AI returned invalid JSON. Please try again.');
-        }
+        console.error('JSON Parse Error:', parseError.message);
+        console.error('Failed JSON:', jsonText.substring(0, 500));
+        throw new Error('Failed to parse AI response. The AI returned invalid JSON. Please try again.');
       }
 
-      const formattedQuestions: QuizQuestion[] = data.map((q: any) => {
+      // Handle both {"questions": [...]} and [...] formats
+      const questionsArray = Array.isArray(data) ? data : (data.questions || []);
+      
+      if (!Array.isArray(questionsArray) || questionsArray.length === 0) {
+        throw new Error('No questions found in AI response. Please try again.');
+      }
+
+      const formattedQuestions: QuizQuestion[] = questionsArray.map((q: any) => {
         let correct: number | string = q.correctAnswer;
         if (q.type === 'mcq') {
           const idx = q.options.findIndex((opt: string) => opt === q.correctAnswer);

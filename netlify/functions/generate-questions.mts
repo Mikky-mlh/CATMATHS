@@ -30,27 +30,29 @@ export default async (req: Request) => {
 
   const prompt = `Generate a CAT-level math practice test with ${numQuestions} questions covering these topics: ${topicNames}.
 
-IMPORTANT: Return ONLY a valid JSON array. No explanations, no markdown, no code blocks.
+IMPORTANT: Return ONLY a valid JSON object with a "questions" array. No explanations, no markdown.
 
 Format:
-[
-  {
-    "id": 1,
-    "type": "mcq",
-    "question": "Question text here. Use $x^2$ for inline math.",
-    "options": ["Option 1", "Option 2", "Option 3", "Option 4"],
-    "correctAnswer": "Option 1",
-    "solution": "Step-by-step solution. Use $x^2$ for inline math."
-  },
-  {
-    "id": 2,
-    "type": "tita",
-    "question": "Question text here.",
-    "options": [],
-    "correctAnswer": "42",
-    "solution": "Step-by-step solution."
-  }
-]
+{
+  "questions": [
+    {
+      "id": 1,
+      "type": "mcq",
+      "question": "Question text here. Use $x^2$ for inline math.",
+      "options": ["Option 1", "Option 2", "Option 3", "Option 4"],
+      "correctAnswer": "Option 1",
+      "solution": "Step-by-step solution. Use $x^2$ for inline math."
+    },
+    {
+      "id": 2,
+      "type": "tita",
+      "question": "Question text here.",
+      "options": [],
+      "correctAnswer": "42",
+      "solution": "Step-by-step solution."
+    }
+  ]
+}
 
 Rules:
 - Use double quotes for all strings
@@ -58,9 +60,7 @@ Rules:
 - correctAnswer must be a string
 - For mcq: correctAnswer must exactly match one option
 - For tita: correctAnswer must be the numerical answer as a string
-- Use $...$ for inline math, $$...$$ for block math
-
-Return ONLY the JSON array, starting with [ and ending with ].`;
+- Use $...$ for inline math, $$...$$ for block math`;
 
   const response = await fetch(
     "https://api.groq.com/openai/v1/chat/completions",
@@ -85,6 +85,7 @@ Return ONLY the JSON array, starting with [ and ending with ].`;
         ],
         temperature: 0.5,
         max_tokens: 4096,
+        response_format: { type: "json_object" },
       }),
     }
   );
