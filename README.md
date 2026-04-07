@@ -6,7 +6,10 @@
 
 ### 🌟 Live Application
 
-[![Visit CATMATHS](https://img.shields.io/badge/🚀_VISIT_LIVE_APP-catmaths.netlify.app-00C7B7?style=for-the-badge&logo=netlify&logoColor=white)](https://catmaths.netlify.app)
+[![Visit CATMATHS on Vercel](https://img.shields.io/badge/🚀_PRIMARY-catmaths.vercel.app-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://catmaths.vercel.app)
+[![Visit CATMATHS on Netlify](https://img.shields.io/badge/🔄_MIRROR-catmaths.netlify.app-00C7B7?style=for-the-badge&logo=netlify&logoColor=white)](https://catmaths.netlify.app)
+
+> **Dual Deployment**: Primary hosting on Vercel for enhanced serverless function performance and reliability. Netlify mirror maintained for redundancy and load distribution.
 
 ---
 
@@ -123,6 +126,7 @@ Distributed under the Apache 2.0 License. See `LICENSE` for more information.
 
 **Built with 🎯 for CAT aspirants starting from scratch**
 
-[![Visit Live App](https://img.shields.io/badge/🚀_Experience_CATMATHS-catmaths.netlify.app-00C7B7?style=for-the-badge&logo=netlify&logoColor=white)](https://catmaths.netlify.app)
+[![Visit on Vercel](https://img.shields.io/badge/🚀_Primary-catmaths.vercel.app-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://catmaths.vercel.app)
+[![Visit on Netlify](https://img.shields.io/badge/🔄_Mirror-catmaths.netlify.app-00C7B7?style=for-the-badge&logo=netlify&logoColor=white)](https://catmaths.netlify.app)
 
 </div>
