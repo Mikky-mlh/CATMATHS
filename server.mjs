@@ -55,7 +55,7 @@ Rules:
         messages: [
           {
             role: 'system',
-            content: 'You are a CAT exam question generator. You MUST respond with ONLY valid JSON. No explanations, no markdown, no code blocks. Just pure JSON starting with { and ending with }.',
+            content: 'You are a CAT exam question generator. You MUST respond with ONLY valid JSON. CRITICAL: Use proper LaTeX with backslashes: \\\\frac NOT frac, \\\\sqrt NOT sqrt, \\\\pi NOT pi.',
           },
           {
             role: 'user',
