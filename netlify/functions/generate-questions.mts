@@ -42,14 +42,6 @@ Format:
       "options": ["Option 1", "Option 2", "Option 3", "Option 4"],
       "correctAnswer": "Option 1",
       "solution": "Step-by-step solution. Use $x^2$ for inline math."
-    },
-    {
-      "id": 2,
-      "type": "tita",
-      "question": "Question text here.",
-      "options": [],
-      "correctAnswer": "42",
-      "solution": "Step-by-step solution."
     }
   ]
 }
@@ -60,48 +52,82 @@ Rules:
 - correctAnswer must be a string
 - For mcq: correctAnswer must exactly match one option
 - For tita: correctAnswer must be the numerical answer as a string
-- Use $...$ for inline math, $$...$$ for block math`;
+- Use $...$ for inline math, $$...$$ for block math
+- CRITICAL: Always use proper LaTeX syntax with backslashes: \\frac{a}{b}, \\sqrt{x}, \\pi, \\theta
+- NEVER write rac{} or sqrt{} - always include the backslash: \\frac, \\sqrt
+- Example: "$\\frac{1}{3} \\pi r^2 h$" NOT "$rac{1}{3} pi r^2 h$"`;
 
-  const response = await fetch(
-    "https://api.groq.com/openai/v1/chat/completions",
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${apiKey}`,
-      },
-      body: JSON.stringify({
-        model: "llama-3.3-70b-versatile",
-        messages: [
-          {
-            role: "system",
-            content:
-              "You are a CAT exam question generator. You MUST respond with ONLY valid JSON. No explanations, no markdown, no code blocks. Just pure JSON starting with [ and ending with ].",
-          },
-          {
-            role: "user",
-            content: prompt,
-          },
-        ],
-        temperature: 0.5,
-        max_tokens: 4096,
-        response_format: { type: "json_object" },
-      }),
+  try {
+    const response = await fetch(
+      "https://api.groq.com/openai/v1/chat/completions",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${apiKey}`,
+        },
+        body: JSON.stringify({
+          model: "llama-3.3-70b-versatile",
+          messages: [
+            {
+              role: "system",
+              content:
+                "You are a CAT exam question generator. You MUST respond with ONLY valid JSON. No explanations, no markdown, no code blocks. Just pure JSON starting with { and ending with }.",
+            },
+            {
+              role: "user",
+              content: prompt,
+            },
+          ],
+          temperature: 0.5,
+          max_tokens: 4096,
+          response_format: { type: "json_object" },
+        }),
+      }
+    );
+
+    if (!response.ok) {
+      let errorData;
+      try {
+        errorData = await response.json();
+      } catch {
+        return Response.json(
+          { error: `Groq API error: ${response.status} ${response.statusText}` },
+          { status: 502 }
+        );
+      }
+      return Response.json(
+        { error: errorData.error?.message || `Groq API error: ${response.status}` },
+        { status: 502 }
+      );
     }
-  );
 
-  if (!response.ok) {
-    const errorData = await response.json();
+    let result;
+    try {
+      result = await response.json();
+    } catch (jsonError) {
+      return Response.json(
+        { error: "Groq API returned incomplete response. Try fewer questions or wait a moment." },
+        { status: 502 }
+      );
+    }
+
+    const responseText = result.choices?.[0]?.message?.content;
+    
+    if (!responseText) {
+      return Response.json(
+        { error: "Groq API returned empty response. Please try again." },
+        { status: 502 }
+      );
+    }
+
+    return Response.json({ content: responseText });
+  } catch (error: any) {
     return Response.json(
-      { error: errorData.error?.message || `Groq API error: ${response.status}` },
-      { status: 502 }
+      { error: error.message || "Internal server error" },
+      { status: 500 }
     );
   }
-
-  const result = await response.json();
-  const responseText = result.choices[0].message.content;
-
-  return Response.json({ content: responseText });
 };
 
 export const config: Config = {

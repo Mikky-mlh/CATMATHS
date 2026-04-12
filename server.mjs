@@ -1,18 +1,20 @@
-import type { VercelRequest, VercelResponse } from '@vercel/node';
+import express from 'express';
+import dotenv from 'dotenv';
 
-export default async function handler(req: VercelRequest, res: VercelResponse) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
-  }
+dotenv.config();
 
+const app = express();
+app.use(express.json());
+
+app.post('/api/generate-questions', async (req, res) => {
   const apiKey = process.env.GROQ_API_KEY;
   if (!apiKey) {
-    return res.status(500).json({ error: 'GROQ_API_KEY is not configured on the server.' });
+    return res.status(500).json({ error: 'GROQ_API_KEY not configured' });
   }
 
   const { topicNames, numQuestions } = req.body;
   if (!topicNames || !numQuestions) {
-    return res.status(400).json({ error: 'topicNames and numQuestions are required.' });
+    return res.status(400).json({ error: 'topicNames and numQuestions required' });
   }
 
   const prompt = `Generate a CAT-level math practice test with ${numQuestions} questions covering these topics: ${topicNames}.
@@ -29,14 +31,6 @@ Format:
       "options": ["Option 1", "Option 2", "Option 3", "Option 4"],
       "correctAnswer": "Option 1",
       "solution": "Step-by-step solution. Use $x^2$ for inline math."
-    },
-    {
-      "id": 2,
-      "type": "tita",
-      "question": "Question text here.",
-      "options": [],
-      "correctAnswer": "42",
-      "solution": "Step-by-step solution."
     }
   ]
 }
@@ -47,10 +41,7 @@ Rules:
 - correctAnswer must be a string
 - For mcq: correctAnswer must exactly match one option
 - For tita: correctAnswer must be the numerical answer as a string
-- Use $...$ for inline math, $$...$$ for block math
-- CRITICAL: Always use proper LaTeX syntax with backslashes: \\frac{a}{b}, \\sqrt{x}, \\pi, \\theta
-- NEVER write rac{} or sqrt{} - always include the backslash: \\frac, \\sqrt
-- Example: "$\\frac{1}{3} \\pi r^2 h$" NOT "$rac{1}{3} pi r^2 h$"`;
+- Use $...$ for inline math, $$...$$ for block math`;
 
   try {
     const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
@@ -82,7 +73,7 @@ Rules:
       try {
         errorData = await response.json();
       } catch {
-        return res.status(502).json({ error: `Groq API error: ${response.status} ${response.statusText}` });
+        return res.status(502).json({ error: `Groq API error: ${response.status}` });
       }
       return res.status(502).json({ error: errorData.error?.message || `Groq API error: ${response.status}` });
     }
@@ -90,18 +81,22 @@ Rules:
     let result;
     try {
       result = await response.json();
-    } catch (jsonError) {
-      return res.status(502).json({ error: 'Groq API returned incomplete response. Try fewer questions or wait a moment.' });
+    } catch {
+      return res.status(502).json({ error: 'Groq API returned incomplete response. Try fewer questions.' });
     }
 
     const responseText = result.choices?.[0]?.message?.content;
-    
     if (!responseText) {
-      return res.status(502).json({ error: 'Groq API returned empty response. Please try again.' });
+      return res.status(502).json({ error: 'Groq API returned empty response.' });
     }
 
-    return res.status(200).json({ content: responseText });
-  } catch (error: any) {
+    return res.json({ content: responseText });
+  } catch (error) {
     return res.status(500).json({ error: error.message || 'Internal server error' });
   }
-}
+});
+
+const PORT = process.env.PORT || 3001;
+app.listen(PORT, () => {
+  console.log(`API server running on http://localhost:${PORT}`);
+});

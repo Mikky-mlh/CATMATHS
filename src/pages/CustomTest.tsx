@@ -18,7 +18,7 @@ export function CustomTest() {
     );
   };
 
-  const handleGenerate = async () => {
+  const handleGenerate = async (retryCount = 0) => {
     if (selectedTopics.length === 0) {
       setError('Please select at least one topic.');
       return;
@@ -27,6 +27,9 @@ export function CustomTest() {
     setLoading(true);
     setError('');
     setGeneratedQuestions([]);
+
+    // Fake delay for better UX
+    await new Promise(resolve => setTimeout(resolve, 800));
 
     try {
       const topicNames = selectedTopics
@@ -41,11 +44,35 @@ export function CustomTest() {
       });
 
       if (!response.ok) {
-        const errorData = await response.json();
+        let errorData;
+        try {
+          errorData = await response.json();
+        } catch {
+          throw new Error(`API Error: ${response.status} - ${response.statusText}`);
+        }
+        
+        // Retry on rate limit
+        if (response.status === 429 && retryCount < 2) {
+          setError('Professor is busy. Retrying in a moment...');
+          await new Promise(resolve => setTimeout(resolve, 2000));
+          return handleGenerate(retryCount + 1);
+        }
+        
         throw new Error(errorData.error || `API Error: ${response.status}`);
       }
 
-      const result = await response.json();
+      let result;
+      try {
+        result = await response.json();
+      } catch (jsonError) {
+        // Retry once on JSON parse error
+        if (retryCount < 1) {
+          setError('Professor got confused. Trying again...');
+          await new Promise(resolve => setTimeout(resolve, 1500));
+          return handleGenerate(retryCount + 1);
+        }
+        throw new Error('Professor got confused. Please try again with fewer questions.');
+      }
       let responseText = result.content;
 
       console.log('Raw AI response:', responseText);
@@ -119,7 +146,18 @@ export function CustomTest() {
       setGeneratedQuestions(formattedQuestions);
     } catch (err: any) {
       console.error(err);
-      setError(err.message || 'Failed to generate questions. Please try again.');
+      // User-friendly error messages
+      let userMessage = err.message || 'Failed to generate questions. Please try again.';
+      
+      if (userMessage.includes('rate limit') || userMessage.includes('429')) {
+        userMessage = 'Too many students asking questions! Please wait 30 seconds and try again.';
+      } else if (userMessage.includes('timeout') || userMessage.includes('network')) {
+        userMessage = 'Connection issue. Check your internet and try again.';
+      } else if (userMessage.includes('JSON') || userMessage.includes('parse')) {
+        userMessage = 'Professor got confused. Try selecting fewer topics or questions.';
+      }
+      
+      setError(userMessage);
     } finally {
       setLoading(false);
     }
@@ -219,6 +257,13 @@ export function CustomTest() {
             </div>
           )}
 
+          {/* Tip about limits */}
+          <div className="callout callout-tip">
+            <p className="text-sm font-body">
+              <strong>💡 Tip:</strong> Start with 5 questions. The AI runs on a free tier (₹0.73/month!) so it might need a moment during peak hours.
+            </p>
+          </div>
+
           {/* Generate Button */}
           <button
             onClick={handleGenerate}
@@ -228,7 +273,7 @@ export function CustomTest() {
             {loading ? (
               <>
                 <Loader2 className="w-5 h-5 animate-spin" />
-                Generating Test...
+                Professor thinking…
               </>
             ) : (
               <>

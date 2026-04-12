@@ -29,10 +29,18 @@ export function QuizEngine({ questions, onComplete }: QuizEngineProps) {
     );
   }
 
+  const normalizeAnswer = (answer: string): string => {
+    return answer
+      .trim()
+      .replace(/\$/g, '')
+      .replace(/\s+/g, '')
+      .toLowerCase();
+  };
+
   const currentQuestion = questions[currentIndex];
   const isCorrect = currentQuestion.type === 'mcq'
     ? selectedOption === currentQuestion.correct
-    : titaAnswer.trim() === String(currentQuestion.correct).trim();
+    : normalizeAnswer(titaAnswer) === normalizeAnswer(String(currentQuestion.correct));
 
   const handleSubmit = (e?: React.FormEvent) => {
     if (e) e.preventDefault();
@@ -244,7 +252,7 @@ export function QuizEngine({ questions, onComplete }: QuizEngineProps) {
                 ) : (
                   <span className="text-error flex items-center gap-1">
                     <XCircle className="w-5 h-5" /> Incorrect. The correct answer is{' '}
-                    <span className="font-mono font-semibold">{currentQuestion.correct}</span>
+                    <span className="font-mono font-semibold"><MathText text={String(currentQuestion.correct)} /></span>
                   </span>
                 )}
               </div>
