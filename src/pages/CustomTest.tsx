@@ -260,7 +260,7 @@ export function CustomTest() {
           {/* Tip about limits */}
           <div className="callout callout-tip">
             <p className="text-sm font-body">
-              <strong>💡 Tip:</strong> Start with 5 questions. The AI runs on a free tier (₹0.73/month!) so it might need a moment during peak hours.
+              <strong>💡 Tip:</strong> Start with 5 questions for faster results. The AI may need a moment during peak hours.
             </p>
           </div>
 
