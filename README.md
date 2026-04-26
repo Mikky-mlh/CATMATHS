@@ -73,7 +73,7 @@ The platform covers the entire CAT Quantitative Aptitude spectrum:
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/Mikky-mlh/Basic-Maths-for-CAT.git
+   git clone https://github.com/Yuvraj-Sarathe/Basic-Maths-for-CAT.git
    cd Basic-Maths-for-CAT/CAT/CATMATHS
    ```
 
