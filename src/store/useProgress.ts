@@ -19,9 +19,9 @@ export const useProgressStore = create<ProgressState>()(
         })),
       unmarkComplete: (topicId) =>
         set((state) => {
-          const next = { ...state.completedTopics };
-          delete next[topicId];
-          return { completedTopics: next };
+          const updated = { ...state.completedTopics };
+          delete updated[topicId];
+          return { completedTopics: updated };
         }),
       isDarkMode: false,
       toggleDarkMode: () =>

@@ -80,51 +80,51 @@ export const syllabus: Module[] = [
       {
         id: 'number-line-integers',
         title: 'The Number Line',
-        content: (
-          <div className="space-y-6 text-gray-800 dark:text-gray-200">
-            <WhyCATCares>
-              Distance and absolute value are the bedrock of Modulus questions — a CAT favorite. Mastering the number line lets you visualize ranges instead of guessing at inequalities.
-            </WhyCATCares>
+         content: (
+           <div className="space-y-6 text-ink">
+             <WhyCATCares>
+               Distance and absolute value are the bedrock of Modulus questions — a CAT favorite. Mastering the number line lets you visualize ranges instead of guessing at inequalities.
+             </WhyCATCares>
 
-            <h2 className="text-2xl font-bold text-blue-600 dark:text-blue-400">The Visual Ruler</h2>
-            <p>Think of the number line as a ruler. Positive numbers to the right, negative to the left.</p>
+             <h2 className="content-section-title">The Visual Ruler</h2>
+             <p>Think of the number line as a ruler. Positive numbers to the right, negative to the left.</p>
 
-            <div className="p-6 bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700">
-              <div className="relative h-12 flex items-center justify-center">
-                <div className="absolute w-full h-1 bg-gray-300 dark:bg-gray-600 rounded"></div>
-                {[-5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5].map((num) => (
-                  <div key={num} className="absolute flex flex-col items-center" style={{ left: `${(num + 5) * 10}%` }}>
-                    <div className="w-1 h-3 bg-gray-500 dark:bg-gray-400"></div>
-                    <span className="text-xs mt-1 font-mono">{num}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
+             <div className="content-block">
+               <div className="relative h-12 flex items-center justify-center">
+                 <div className="absolute w-full h-1 bg-line-light rounded" />
+                 {[-5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5].map((num) => (
+                   <div key={num} className="absolute flex flex-col items-center" style={{ left: `${(num + 5) * 10}%` }}>
+                     <div className="w-1 h-3 bg-ink-muted" />
+                     <span className="text-xs mt-1 font-mono">{num}</span>
+                   </div>
+                 ))}
+               </div>
+             </div>
 
-            <HowToSpot>
-              Look for keywords like "distance between," "absolute value," or inequalities like <InlineMath math="|x - a| < b" />.
-            </HowToSpot>
+             <HowToSpot>
+               Look for keywords like "distance between," "absolute value," or inequalities like <InlineMath math="|x - a| < b" />.
+             </HowToSpot>
 
-            <h2 className="text-2xl font-bold text-blue-600 dark:text-blue-400 mt-8">Absolute Value</h2>
-            <p><strong>Absolute value = distance from zero.</strong> It's always non-negative because distance cannot be negative.</p>
-            <div className="p-4 bg-gray-50 dark:bg-gray-800/50 rounded-lg">
-              <BlockMath math="|x| = |-x|" />
-              <p className="text-sm">Example: <InlineMath math="|-7| = 7" /> and <InlineMath math="|7| = 7" />.</p>
-            </div>
+             <h2 className="content-section-title-level-2">Absolute Value</h2>
+             <p><strong>Absolute value = distance from zero.</strong> It's always non-negative because distance cannot be negative.</p>
+             <div className="content-block-sm bg-surface-alt">
+               <BlockMath math="|x| = |-x|" />
+               <p className="text-sm">Example: <InlineMath math="|-7| = 7" /> and <InlineMath math="|7| = 7" />.</p>
+             </div>
 
-            <CommonTraps>
-              Students often solve <InlineMath math="|x - 5| = 12" /> and find only <InlineMath math="x = 17" />.
-              <strong> Always remember the negative case:</strong> <InlineMath math="x - 5 = -12" /> leads to <InlineMath math="x = -7" />.
-            </CommonTraps>
+             <CommonTraps>
+               Students often solve <InlineMath math="|x - 5| = 12" /> and find only <InlineMath math="x = 17" />.
+               <strong> Always remember the negative case:</strong> <InlineMath math="x - 5 = -12" /> leads to <InlineMath math="x = -7" />.
+             </CommonTraps>
 
-            <Shortcut>
-              <strong>Distance between any two points a and b = |a - b|.</strong>
-              <br />
-              "Find distance between -7 and 4" → <InlineMath math="|-7 - 4| = |-11| = 11" />.
-              No need to count on your fingers!
-            </Shortcut>
-          </div>
-        ),
+             <Shortcut>
+               <strong>Distance between any two points a and b = |a - b|.</strong>
+               <br />
+               "Find distance between -7 and 4" → <InlineMath math="|-7 - 4| = |-11| = 11" />.
+               No need to count on your fingers!
+             </Shortcut>
+           </div>
+         ),
         quiz: [
           {
             id: 1, type: 'mcq',
@@ -144,46 +144,46 @@ export const syllabus: Module[] = [
         id: 'fractions-decimals',
         title: 'Fractions & Decimals',
         content: (
-          <div className="space-y-6 text-gray-800 dark:text-gray-200">
+          <div className="space-y-6 text-ink">
             <WhyCATCares>
               Speed is the name of the game. Converting fractions to percentages instantly is the difference between finishing 15 questions vs 20 questions in the QA section.
             </WhyCATCares>
 
-            <h2 className="text-2xl font-bold text-blue-600 dark:text-blue-400">The Speed Grid</h2>
-            <p>Memorize these equivalencies. They are the "multiplication tables" of CAT Arithmetic.</p>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
-              {[
-                { f: '1/2', d: '0.50', p: '50%' }, { f: '1/3', d: '0.333...', p: '33.33%' },
-                { f: '1/4', d: '0.25', p: '25%' }, { f: '1/5', d: '0.20', p: '20%' },
-                { f: '1/6', d: '0.166...', p: '16.66%' }, { f: '1/7', d: '0.1428...', p: '14.28%' },
-                { f: '1/8', d: '0.125', p: '12.5%' }, { f: '1/9', d: '0.111...', p: '11.11%' },
-                { f: '1/11', d: '0.0909...', p: '9.09%' }, { f: '1/12', d: '0.0833...', p: '8.33%' },
-              ].map(item => (
-                <div key={item.f} className="p-3 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700 text-center">
-                  <span className="font-bold block mb-1">{item.f}</span>
-                  <span className="text-sm text-gray-500 block">{item.d}</span>
-                  <span className="text-sm font-semibold text-blue-600 dark:text-blue-400">{item.p}</span>
-                </div>
-              ))}
-            </div>
+             <h2 className="content-section-title">The Speed Grid</h2>
+             <p>Memorize these equivalencies. They are the "multiplication tables" of CAT Arithmetic.</p>
+             <div className="content-grid-4 mt-4">
+               {[
+                 { f: '1/2', d: '0.50', p: '50%' }, { f: '1/3', d: '0.333...', p: '33.33%' },
+                 { f: '1/4', d: '0.25', p: '25%' }, { f: '1/5', d: '0.20', p: '20%' },
+                 { f: '1/6', d: '0.166...', p: '16.66%' }, { f: '1/7', d: '0.1428...', p: '14.28%' },
+                 { f: '1/8', d: '0.125', p: '12.5%' }, { f: '1/9', d: '0.111...', p: '11.11%' },
+                 { f: '1/11', d: '0.0909...', p: '9.09%' }, { f: '1/12', d: '0.0833...', p: '8.33%' },
+               ].map(item => (
+                 <div key={item.f} className="content-block-sm text-center">
+                   <span className="font-bold block mb-1">{item.f}</span>
+                   <span className="text-sm text-ink-muted block">{item.d}</span>
+                   <span className="text-sm font-semibold text-primary">{item.p}</span>
+                 </div>
+               ))}
+             </div>
 
-            <CommonTraps>
-              <strong>1/9 vs 1/11:</strong>
-              <ul className="list-disc list-inside">
-                <li><InlineMath math="1/9 = 11.11\%" /> (Think: nines have digits of ones)</li>
-                <li><InlineMath math="1/11 = 9.09\%" /> (Think: elevens have digits of nines)</li>
-              </ul>
-              Mixing these up is a classic rookie mistake.
-            </CommonTraps>
+             <CommonTraps>
+               <strong>1/9 vs 1/11:</strong>
+               <ul className="list-disc list-inside">
+                 <li><InlineMath math="1/9 = 11.11\%" /> (Think: nines have digits of ones)</li>
+                 <li><InlineMath math="1/11 = 9.09\%" /> (Think: elevens have digits of nines)</li>
+               </ul>
+               Mixing these up is a classic rookie mistake.
+             </CommonTraps>
 
-            <Shortcut>
-              <strong>Converting Recurring Decimals:</strong>
-              <div className="p-4 bg-emerald-50 dark:bg-emerald-900/20 rounded-lg mt-2 font-mono">
-                0.3636... = 36/99 = 4/11<br />
-                0.2727... = 27/99 = 3/11
-              </div>
-              "Put as many 9s in the denominator as there are repeating digits."
-            </Shortcut>
+             <Shortcut>
+               <strong>Converting Recurring Decimals:</strong>
+               <div className="content-block-sm bg-content-note border-l-4 border-content-note mt-2 font-mono">
+                 0.3636... = 36/99 = 4/11<br />
+                 0.2727... = 27/99 = 3/11
+               </div>
+               "Put as many 9s in the denominator as there are repeating digits."
+             </Shortcut>
           </div>
         ),
         quiz: [
@@ -195,44 +195,44 @@ export const syllabus: Module[] = [
           }
         ]
       },
-      {
-        id: 'option-elimination',
-        title: 'Option Elimination & Approximation',
-        content: (
-          <div className="space-y-6 text-gray-800 dark:text-gray-200">
-            <WhyCATCares>
-              You don't get marks for your rough sheet. You get marks for the right bubble. Learning to eliminate wrong answers is a superpower that can save 30–40 seconds per question.
-            </WhyCATCares>
+       {
+         id: 'option-elimination',
+         title: 'Option Elimination & Approximation',
+         content: (
+           <div className="space-y-6 text-ink">
+             <WhyCATCares>
+               You don't get marks for your rough sheet. You get marks for the right bubble. Learning to eliminate wrong answers is a superpower that can save 30–40 seconds per question.
+             </WhyCATCares>
 
-            <h2 className="text-2xl font-bold text-blue-600 dark:text-blue-400">The Art of the "Smart Guess"</h2>
-            <p>CAT often provides options with different unit digits or different ranges. Use this to your advantage.</p>
+             <h2 className="content-section-title">The Art of the "Smart Guess"</h2>
+             <p>CAT often provides options with different unit digits or different ranges. Use this to your advantage.</p>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="p-4 bg-gray-50 dark:bg-gray-800/50 rounded-lg">
-                <h3 className="font-bold mb-2">1. Unit Digit Analysis</h3>
-                <p className="text-sm">If the options are 124, 156, 189, and 201, and your calculation ends in <InlineMath math="6 \times 4" />, the answer MUST end in 4. Only 124 qualifies.</p>
-              </div>
-              <div className="p-4 bg-gray-50 dark:bg-gray-800/50 rounded-lg">
-                <h3 className="font-bold mb-2">2. Range Approximation</h3>
-                <p className="text-sm">Instead of <InlineMath math="19.8 \times 31.2" />, calculate <InlineMath math="20 \times 30 = 600" />. If only one option is near 600, you're done.</p>
-              </div>
-            </div>
+             <div className="content-grid-2">
+               <div className="content-block-sm">
+                 <h3 className="content-section-title-level-3 mb-2">1. Unit Digit Analysis</h3>
+                 <p className="text-sm">If the options are 124, 156, 189, and 201, and your calculation ends in <InlineMath math="6 \times 4" />, the answer MUST end in 4. Only 124 qualifies.</p>
+               </div>
+               <div className="content-block-sm">
+                 <h3 className="content-section-title-level-3 mb-2">2. Range Approximation</h3>
+                 <p className="text-sm">Instead of <InlineMath math="19.8 \times 31.2" />, calculate <InlineMath math="20 \times 30 = 600" />. If only one option is near 600, you're done.</p>
+               </div>
+             </div>
 
-            <HowToSpot>
-              Use this when the options are far apart or have different ending digits. <strong>Always scan the options before you start solving!</strong>
-            </HowToSpot>
+             <HowToSpot>
+               Use this when the options are far apart or have different ending digits. <strong>Always scan the options before you start solving!</strong>
+             </HowToSpot>
 
-            <Shortcut>
-              <strong>The Rule of 72:</strong>
-              <p className="text-sm mt-1">To find out how long it takes for money to double at <InlineMath math="r\%" /> interest, just calculate <InlineMath math="72 / r" />.
-              Example: At 8%, money doubles in ~9 years.</p>
-            </Shortcut>
+             <Shortcut>
+               <strong>The Rule of 72:</strong>
+               <p className="text-sm mt-1">To find out how long it takes for money to double at <InlineMath math="r\%" /> interest, just calculate <InlineMath math="72 / r" />.
+               Example: At 8%, money doubles in ~9 years.</p>
+             </Shortcut>
 
-            <CommonTraps>
-              Approximation is dangerous in TITA (Type In The Answer) questions. Only use it to eliminate options in MCQs. For TITA, you must be precise.
-            </CommonTraps>
-          </div>
-        ),
+             <CommonTraps>
+               Approximation is dangerous in TITA (Type In The Answer) questions. Only use it to eliminate options in MCQs. For TITA, you must be precise.
+             </CommonTraps>
+           </div>
+         ),
         quiz: [
           {
             id: 1, type: 'mcq',
@@ -242,41 +242,41 @@ export const syllabus: Module[] = [
           }
         ]
       },
-      {
-        id: 'di-calculation-basics',
-        title: 'DI Calculation Basics',
-        content: (
-          <div className="space-y-6 text-gray-800 dark:text-gray-200">
-            <WhyCATCares>
-              The DILR section is often won or lost based on how fast you can compare two fractions or approximate a growth rate.
-            </WhyCATCares>
+       {
+         id: 'di-calculation-basics',
+         title: 'DI Calculation Basics',
+         content: (
+           <div className="space-y-6 text-ink">
+             <WhyCATCares>
+               The DILR section is often won or lost based on how fast you can compare two fractions or approximate a growth rate.
+             </WhyCATCares>
 
-            <h2 className="text-2xl font-bold text-blue-600 dark:text-blue-400">Comparing Fractions Without Division</h2>
-            <p>Which is larger: <InlineMath math="17/23" /> or <InlineMath math="19/25" />? Stop dividing!</p>
+             <h2 className="content-section-title">Comparing Fractions Without Division</h2>
+             <p>Which is larger: <InlineMath math="17/23" /> or <InlineMath math="19/25" />? Stop dividing!</p>
 
-            <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-              <h3 className="font-bold mb-2">The Cross-Multiplication Hack</h3>
-              <p className="text-sm">
-                Multiply <InlineMath math="17 \times 25" /> and <InlineMath math="23 \times 19" />.
-                <br /><InlineMath math="17 \times 25 = 425" />
-                <br /><InlineMath math="23 \times 19 = 437" />
-                <br />Since <InlineMath math="437 > 425" />, <InlineMath math="19/25" /> is larger.
-              </p>
-            </div>
+             <div className="content-block-sm bg-content-highlight border-l-4 border-content-highlight">
+               <h3 className="font-semibold mb-2 text-content-highlight">The Cross-Multiplication Hack</h3>
+               <p className="text-sm">
+                 Multiply <InlineMath math="17 \times 25" /> and <InlineMath math="23 \times 19" />.
+                 <br /><InlineMath math="17 \times 25 = 425" />
+                 <br /><InlineMath math="23 \times 19 = 437" />
+                 <br />Since <InlineMath math="437 > 425" />, <InlineMath math="19/25" /> is larger.
+               </p>
+             </div>
 
-            <h3 className="text-xl font-semibold mt-6">Estimation of CAGR (Growth Rate)</h3>
-            <p>If a value grows from 100 to 150 over 3 years, what is the approximate annual growth rate?</p>
-            <Shortcut>
-              <strong>Net Change / Number of Years.</strong><br />
-              <InlineMath math="50\% / 3 \approx 16.6\%" />.
-              The actual CAGR will be slightly less due to compounding, but this approximation picks the right option in 90% of DI sets.
-            </Shortcut>
+             <h3 className="content-section-title-level-3">Estimation of CAGR (Growth Rate)</h3>
+             <p>If a value grows from 100 to 150 over 3 years, what is the approximate annual growth rate?</p>
+             <Shortcut>
+               <strong>Net Change / Number of Years.</strong><br />
+               <InlineMath math="50\% / 3 \approx 16.6\%" />.
+               The actual CAGR will be slightly less due to compounding, but this approximation picks the right option in 90% of DI sets.
+             </Shortcut>
 
-            <HowToSpot>
-              Essential for "Which year had the highest percentage growth?" or "In which period was the ratio maximum?" type questions.
-            </HowToSpot>
-          </div>
-        ),
+             <HowToSpot>
+               Essential for "Which year had the highest percentage growth?" or "In which period was the ratio maximum?" type questions.
+             </HowToSpot>
+           </div>
+         ),
         quiz: [
           {
             id: 1, type: 'mcq',
@@ -296,45 +296,45 @@ export const syllabus: Module[] = [
     id: 'number-systems',
     title: 'Number Systems & Divisibility',
     topics: [
-      {
-        id: 'divisibility-rules',
-        title: 'Divisibility Rules',
-        content: (
-          <div className="space-y-6 text-gray-800 dark:text-gray-200">
-            <WhyCATCares>
-              Direct questions on divisibility are rare, but it's the #1 tool for option elimination. If the solution must be divisible by 17, only multiples of 17 in the options qualify.
-            </WhyCATCares>
+       {
+         id: 'divisibility-rules',
+         title: 'Divisibility Rules',
+         content: (
+           <div className="space-y-6 text-ink">
+             <WhyCATCares>
+               Direct questions on divisibility are rare, but it's the #1 tool for option elimination. If the solution must be divisible by 17, only multiples of 17 in the options qualify.
+             </WhyCATCares>
 
-            <h2 className="text-2xl font-bold text-blue-600 dark:text-blue-400">The Power of Quick Checks</h2>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-              {[
-                { div: '2', rule: 'Last digit even' }, { div: '3', rule: 'Sum of digits ÷ 3' },
-                { div: '4', rule: 'Last 2 digits ÷ 4' }, { div: '5', rule: 'Last digit 0 or 5' },
-                { div: '6', rule: 'Divisible by 2 AND 3' }, { div: '8', rule: 'Last 3 digits ÷ 8' },
-                { div: '9', rule: 'Sum of digits ÷ 9' }, { div: '11', rule: 'Odd-even place diff ÷ 11' },
-              ].map(item => (
-                <div key={item.div} className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg text-center">
-                  <p className="font-bold text-blue-700 dark:text-blue-400">÷ {item.div}</p>
-                  <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">{item.rule}</p>
-                </div>
-              ))}
-            </div>
+             <h2 className="content-section-title">The Power of Quick Checks</h2>
+             <div className="content-grid-4">
+               {[
+                 { div: '2', rule: 'Last digit even' }, { div: '3', rule: 'Sum of digits ÷ 3' },
+                 { div: '4', rule: 'Last 2 digits ÷ 4' }, { div: '5', rule: 'Last digit 0 or 5' },
+                 { div: '6', rule: 'Divisible by 2 AND 3' }, { div: '8', rule: 'Last 3 digits ÷ 8' },
+                 { div: '9', rule: 'Sum of digits ÷ 9' }, { div: '11', rule: 'Odd-even place diff ÷ 11' },
+               ].map(item => (
+                 <div key={item.div} className="content-block-sm text-center">
+                   <p className="font-semibold text-primary mb-1">÷ {item.div}</p>
+                   <p className="text-xs text-ink-muted">{item.rule}</p>
+                 </div>
+               ))}
+             </div>
 
-            <HowToSpot>
-              Use this when you see "is a multiple of," "leaves a remainder of 0," or when checking options quickly.
-            </HowToSpot>
+             <HowToSpot>
+               Use this when you see "is a multiple of," "leaves a remainder of 0," or when checking options quickly.
+             </HowToSpot>
 
-            <Shortcut>
-              <strong>The 11 Rule hack:</strong> Difference between sum of digits at odd places and even places should be 0 or a multiple of 11.
-              <br />Example: 1331 → (1+3) - (3+1) = 0. Divisible!
-            </Shortcut>
+             <Shortcut>
+               <strong>The 11 Rule hack:</strong> Difference between sum of digits at odd places and even places should be 0 or a multiple of 11.
+               <br />Example: 1331 → (1+3) - (3+1) = 0. Divisible!
+             </Shortcut>
 
-            <CommonTraps>
-              Dividing by a composite number requires checking coprimes.
-              <strong> Example:</strong> To check divisibility by 12, check for both 3 AND 4. Checking for 2 and 6 is NOT enough (e.g., 6 is divisible by 2 and 6 but not 12).
-            </CommonTraps>
-          </div>
-        ),
+             <CommonTraps>
+               Dividing by a composite number requires checking coprimes.
+               <strong> Example:</strong> To check divisibility by 12, check for both 3 AND 4. Checking for 2 and 6 is NOT enough (e.g., 6 is divisible by 2 and 6 but not 12).
+             </CommonTraps>
+           </div>
+         ),
         quiz: [
           {
             id: 1, type: 'tita',
@@ -348,15 +348,15 @@ export const syllabus: Module[] = [
         id: 'unit-digit-cyclicity',
         title: 'Unit Digit & Cyclicity',
         content: (
-          <div className="space-y-6 text-gray-800 dark:text-gray-200">
+          <div className="space-y-6 text-ink">
             <WhyCATCares>
               "Unit digit" is a powerful filtering tool for MCQs. Even when you can't solve the full problem, knowing the unit digit can eliminate 2–3 options instantly.
             </WhyCATCares>
 
-            <h2 className="text-2xl font-bold text-blue-600 dark:text-blue-400">The Power of 4</h2>
+            <h2 className="content-section-title">The Power of 4</h2>
             <p>Most digits cycle every 4 powers. Just find the remainder of the power when divided by 4.</p>
 
-            <div className="p-6 bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700">
+            <div className="content-block">
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b">
@@ -406,20 +406,20 @@ export const syllabus: Module[] = [
         id: 'factors-multiples',
         title: 'Factors, Multiples & Trailing Zeros',
         content: (
-          <div className="space-y-6 text-gray-800 dark:text-gray-200">
+          <div className="space-y-6 text-ink">
             <WhyCATCares>
               Factor theory is the gateway to Number Systems questions. CAT loves "number of factors," "sum of factors," and "trailing zeros in n!" — these are easy marks once you know the formulas.
             </WhyCATCares>
 
-            <h2 className="text-2xl font-bold text-blue-600 dark:text-blue-400">Prime Factorization</h2>
+            <h2 className="content-section-title">Prime Factorization</h2>
             <p>Every number can be written as <InlineMath math="N = a^p \times b^q \times c^r" />.</p>
 
-            <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+            <div className="p-4 bg-content-highlight rounded-lg">
               <h3 className="font-bold mb-2">Total Number of Factors</h3>
               <BlockMath math="(p+1)(q+1)(r+1)" />
             </div>
 
-            <div className="p-4 bg-gray-50 dark:bg-gray-800/50 rounded-lg mt-4">
+            <div className="p-4 bg-surface-alt rounded-lg mt-4">
               <p className="font-bold">Sum of Factors:</p>
               <BlockMath math="\frac{a^{p+1}-1}{a-1} \cdot \frac{b^{q+1}-1}{b-1} \cdot \frac{c^{r+1}-1}{c-1}" />
             </div>
@@ -428,7 +428,7 @@ export const syllabus: Module[] = [
               Look for "perfect square factors," "odd factors," "even factors," or "divisibility of factorials."
             </HowToSpot>
 
-            <h3 className="text-xl font-semibold mt-6">Trailing Zeros in n!</h3>
+            <h3 className="content-section-title-level-3">Trailing Zeros in n!</h3>
             <p>Trailing zeros come from factors of 10. Since 10 = 2 × 5 and there are always more 2s, just count the 5s.</p>
             <Shortcut>
               <strong>Formula for trailing zeros in <InlineMath math="n!" />:</strong>
@@ -456,12 +456,12 @@ export const syllabus: Module[] = [
         id: 'hcf-lcm',
         title: 'HCF & LCM',
         content: (
-          <div className="space-y-6 text-gray-800 dark:text-gray-200">
+          <div className="space-y-6 text-ink">
             <WhyCATCares>
               HCF/LCM questions appear directly AND as building blocks for ratio, TSD, and time & work problems. The relationship HCF × LCM = Product is used more often than you'd think.
             </WhyCATCares>
 
-            <h2 className="text-2xl font-bold text-blue-600 dark:text-blue-400">Highest Common Factor & Least Common Multiple</h2>
+            <h2 className="content-section-title">Highest Common Factor & Least Common Multiple</h2>
 
             <HowToSpot>
               <ul className="list-disc list-inside">
@@ -471,18 +471,18 @@ export const syllabus: Module[] = [
               </ul>
             </HowToSpot>
 
-            <h3 className="text-xl font-semibold mt-6">Key Relationship</h3>
-            <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border-l-4 border-blue-500">
+            <h3 className="content-section-title-level-3">Key Relationship</h3>
+            <div className="note-block-highlight">
               <BlockMath math="\text{Product of two numbers} = \text{HCF} \times \text{LCM}" />
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-              <div className="p-4 bg-emerald-50 dark:bg-emerald-900/20 rounded-lg">
-                <h4 className="font-bold text-emerald-700 dark:text-emerald-400 mb-2">HCF Method</h4>
+              <div className="p-4 bg-content-note rounded-lg">
+                <h4 className="font-bold text-success mb-2">HCF Method</h4>
                 <p className="text-sm">Product of <strong>common</strong> prime factors with <strong>lowest</strong> powers.</p>
               </div>
-              <div className="p-4 bg-purple-50 dark:bg-purple-900/20 rounded-lg">
-                <h4 className="font-bold text-purple-700 dark:text-purple-400 mb-2">LCM Method</h4>
+              <div className="p-4 bg-surface-alt rounded-lg">
+                <h4 className="font-bold text-mod-modern mb-2">LCM Method</h4>
                 <p className="text-sm">Product of <strong>all</strong> prime factors with <strong>highest</strong> powers.</p>
               </div>
             </div>
@@ -511,15 +511,15 @@ export const syllabus: Module[] = [
         id: 'remainders',
         title: 'Remainders & Modular Arithmetic',
         content: (
-          <div className="space-y-6 text-gray-800 dark:text-gray-200">
+          <div className="space-y-6 text-ink">
             <WhyCATCares>
               Remainder questions are a CAT staple, especially as TITA questions. You need basic mod arithmetic and pattern recognition — not advanced theorems.
             </WhyCATCares>
 
-            <h2 className="text-2xl font-bold text-blue-600 dark:text-blue-400">Think in Remainders</h2>
+            <h2 className="content-section-title">Think in Remainders</h2>
             <p>Modular arithmetic is just a fancy way of saying "what's left over after division." The key insight: you can take remainders at each step of a calculation.</p>
 
-            <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+            <div className="p-4 bg-content-highlight rounded-lg">
               <h3 className="font-bold mb-2">Core Properties</h3>
               <ul className="list-disc list-inside space-y-1 text-sm">
                 <li><InlineMath math="(a + b) \mod n = [(a \mod n) + (b \mod n)] \mod n" /></li>
@@ -531,9 +531,9 @@ export const syllabus: Module[] = [
               Look for: "Find the remainder when... is divided by..." or "What is the last digit of..." (last digit = remainder when divided by 10).
             </HowToSpot>
 
-            <h3 className="text-xl font-semibold mt-6">The Pattern-Finding Method</h3>
+            <h3 className="content-section-title-level-3">The Pattern-Finding Method</h3>
             <p>For <InlineMath math="a^n \mod d" />, find the cycle of remainders:</p>
-            <div className="p-4 bg-emerald-50 dark:bg-emerald-900/20 rounded-lg border-l-4 border-emerald-500">
+            <div className="note-block-note">
               <p className="font-medium">Example: Find remainder of <InlineMath math="2^{100}" /> divided by 7.</p>
               <ol className="list-decimal list-inside mt-2 space-y-1 text-sm">
                 <li><InlineMath math="2^1 \mod 7 = 2" /></li>
@@ -587,20 +587,20 @@ export const syllabus: Module[] = [
         id: 'percentages',
         title: 'Percentages & Base Values',
         content: (
-          <div className="space-y-6 text-gray-800 dark:text-gray-200">
+          <div className="space-y-6 text-ink">
             <WhyCATCares>
               Percentages are the foundation for Profit/Loss, Interest, and DI. This single topic touches ~40% of all QA questions directly or indirectly.
             </WhyCATCares>
 
-            <h2 className="text-2xl font-bold text-blue-600 dark:text-blue-400">The Dynamics of Base Values</h2>
+            <h2 className="content-section-title">The Dynamics of Base Values</h2>
 
             <HowToSpot>
               Look for: "increased by X%", "what percent of", "successive changes", "percentage point vs percentage change."
             </HowToSpot>
 
-            <h3 className="text-xl font-semibold mt-6">Successive Percentage Change</h3>
+            <h3 className="content-section-title-level-3">Successive Percentage Change</h3>
             <p>If a value changes by <InlineMath math="a\%" /> and then by <InlineMath math="b\%" />:</p>
-            <div className="p-4 bg-emerald-50 dark:bg-emerald-900/20 rounded-lg border-l-4 border-emerald-500">
+            <div className="note-block-note">
               <BlockMath math="\text{Net Change} = a + b + \frac{ab}{100}" />
             </div>
             <p className="text-sm italic mt-2">Use negative signs for decreases. Example: 20% increase then 10% decrease → a = 20, b = -10.</p>
@@ -609,7 +609,7 @@ export const syllabus: Module[] = [
               <strong>Always assume the base = 100</strong> when no specific value is given. This turns every percentage problem into simple arithmetic.
             </Shortcut>
 
-            <h3 className="text-xl font-semibold mt-8">Percentage Point vs. Percentage Change</h3>
+            <h3 className="content-section-title-level-3">Percentage Point vs. Percentage Change</h3>
             <CommonTraps>
               An increase from <strong>10% to 15%</strong> is a <strong>5 percentage point</strong> increase.
               But it is a <strong>50% percentage increase</strong> (since 5 is 50% of the original 10).
@@ -636,12 +636,12 @@ export const syllabus: Module[] = [
         id: 'profit-loss-discount',
         title: 'Profit, Loss & Discount',
         content: (
-          <div className="space-y-6 text-gray-800 dark:text-gray-200">
+          <div className="space-y-6 text-ink">
             <WhyCATCares>
               One of the most frequently tested arithmetic topics. Appears 2–3 times per CAT paper on average.
             </WhyCATCares>
 
-            <h2 className="text-2xl font-bold text-blue-600 dark:text-blue-400">Follow the Money</h2>
+            <h2 className="content-section-title">Follow the Money</h2>
             <p>Always track what actually leaves the shopkeeper's pocket (CP) versus what the customer pays (SP).</p>
 
             <HowToSpot>
@@ -653,18 +653,18 @@ export const syllabus: Module[] = [
             </CommonTraps>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-              <div className="p-4 bg-green-50 dark:bg-green-900/20 rounded-lg">
-                <h3 className="font-bold text-green-700 dark:text-green-400 mb-2">Profit</h3>
+              <div className="p-4 bg-surface-alt rounded-lg">
+                <h3 className="font-bold text-success mb-2">Profit</h3>
                 <BlockMath math="\text{Profit \%} = \frac{SP - CP}{CP} \times 100" />
               </div>
-              <div className="p-4 bg-red-50 dark:bg-red-900/20 rounded-lg">
-                <h3 className="font-bold text-red-700 dark:text-red-400 mb-2">Discount</h3>
+              <div className="p-4 bg-surface-alt rounded-lg">
+                <h3 className="font-bold text-error mb-2">Discount</h3>
                 <BlockMath math="\text{Discount \%} = \frac{MP - SP}{MP} \times 100" />
               </div>
             </div>
 
-            <h3 className="text-xl font-semibold mt-6">Master Relationship</h3>
-            <div className="p-4 bg-purple-50 dark:bg-purple-900/20 rounded-lg border-l-4 border-purple-500">
+            <h3 className="content-section-title-level-3">Master Relationship</h3>
+            <div className="content-block-sm">
               <BlockMath math="\frac{MP}{CP} = \frac{100 + \text{Profit \%}}{100 - \text{Discount \%}}" />
             </div>
 
@@ -673,8 +673,8 @@ export const syllabus: Module[] = [
               Don't calculate them separately!
             </Shortcut>
 
-            <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg mt-4">
-              <h4 className="font-bold text-blue-700 dark:text-blue-400 mb-2">📝 CAT-Style Example</h4>
+            <div className="p-4 bg-content-highlight rounded-lg mt-4">
+              <h4 className="font-bold text-primary mb-2">📝 CAT-Style Example</h4>
               <p className="text-sm mb-2"><strong>Problem:</strong> A shopkeeper marks goods 60% above CP and gives 20% discount. Find profit %.</p>
               <ol className="list-decimal list-inside space-y-1 text-sm">
                 <li>Assume CP = ₹100</li>
@@ -699,27 +699,27 @@ export const syllabus: Module[] = [
         id: 'simple-compound-interest',
         title: 'Simple & Compound Interest',
         content: (
-          <div className="space-y-6 text-gray-800 dark:text-gray-200">
+          <div className="space-y-6 text-ink">
             <WhyCATCares>
               SI/CI questions appear regularly and are usually quick solves if you know the shortcuts. The 2-year CI-SI difference formula alone can save 2 minutes.
             </WhyCATCares>
 
-            <h2 className="text-2xl font-bold text-blue-600 dark:text-blue-400">Money Grows</h2>
+            <h2 className="content-section-title">Money Grows</h2>
 
             <HowToSpot>
               Look for: "simple interest," "compound interest," "compounded half-yearly/quarterly," "difference between CI and SI."
             </HowToSpot>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="p-4 bg-gray-50 dark:bg-gray-800/50 rounded-lg">
+              <div className="p-4 bg-surface-alt rounded-lg">
                 <p className="font-bold">Simple Interest</p>
                 <BlockMath math="SI = \frac{P \times R \times T}{100}" />
-                <p className="text-sm mt-2 text-gray-600 dark:text-gray-400">Interest on original principal only (linear growth)</p>
+                <p className="text-sm mt-2 text-ink-muted">Interest on original principal only (linear growth)</p>
               </div>
-              <div className="p-4 bg-gray-50 dark:bg-gray-800/50 rounded-lg">
+              <div className="p-4 bg-surface-alt rounded-lg">
                 <p className="font-bold">Compound Interest</p>
                 <BlockMath math="A = P\left(1 + \frac{R}{100}\right)^T" />
-                <p className="text-sm mt-2 text-gray-600 dark:text-gray-400">Interest on principal + accumulated interest (exponential growth)</p>
+                <p className="text-sm mt-2 text-ink-muted">Interest on principal + accumulated interest (exponential growth)</p>
               </div>
             </div>
 
@@ -747,12 +747,12 @@ export const syllabus: Module[] = [
         id: 'ratio-proportion-variation',
         title: 'Ratio, Proportion & Variation',
         content: (
-          <div className="space-y-6 text-gray-800 dark:text-gray-200">
+          <div className="space-y-6 text-ink">
             <WhyCATCares>
               Ratios are the language of comparison in CAT. They underpin TSD, Time & Work, and Mixtures. If you can't think in ratios, you'll struggle with half the QA section.
             </WhyCATCares>
 
-            <h2 className="text-2xl font-bold text-blue-600 dark:text-blue-400">Comparing Quantities</h2>
+            <h2 className="content-section-title">Comparing Quantities</h2>
 
             <HowToSpot>
               Look for: "in the ratio," "proportional to," "varies directly/inversely," or any problem comparing two quantities.
@@ -763,20 +763,20 @@ export const syllabus: Module[] = [
               a:b = 8:12, b:c = 12:15 → a:b:c = 8:12:15. Use LCM of the common term.
             </Shortcut>
 
-            <div className="p-4 bg-gray-50 dark:bg-gray-800/50 rounded-lg mt-4">
+            <div className="p-4 bg-surface-alt rounded-lg mt-4">
               <p className="font-bold">Componendo & Dividendo</p>
               <BlockMath math="\text{If } \frac{a}{b} = \frac{c}{d} \quad\Rightarrow\quad \frac{a+b}{a-b} = \frac{c+d}{c-d}" />
             </div>
 
-            <h3 className="text-xl font-semibold mt-4">Variation</h3>
+            <h3 className="content-section-title-level-3">Variation</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-                <p className="font-bold text-blue-700 dark:text-blue-400">Direct: <InlineMath math="y = kx" /></p>
-                <p className="text-xs text-gray-600 dark:text-gray-400">As x increases, y increases</p>
+              <div className="p-3 bg-content-highlight rounded-lg">
+                <p className="font-bold text-primary">Direct: <InlineMath math="y = kx" /></p>
+                <p className="text-xs text-ink-muted">As x increases, y increases</p>
               </div>
-              <div className="p-3 bg-purple-50 dark:bg-purple-900/20 rounded-lg">
-                <p className="font-bold text-purple-700 dark:text-purple-400">Inverse: <InlineMath math="y = k/x" /></p>
-                <p className="text-xs text-gray-600 dark:text-gray-400">As x increases, y decreases</p>
+              <div className="p-3 bg-surface-alt rounded-lg">
+                <p className="font-bold text-mod-modern">Inverse: <InlineMath math="y = k/x" /></p>
+                <p className="text-xs text-ink-muted">As x increases, y decreases</p>
               </div>
             </div>
           </div>
@@ -794,20 +794,20 @@ export const syllabus: Module[] = [
         id: 'averages-mixtures-alligations',
         title: 'Averages, Mixtures & Alligations',
         content: (
-          <div className="space-y-6 text-gray-800 dark:text-gray-200">
+          <div className="space-y-6 text-ink">
             <WhyCATCares>
               Alligation is one of the most powerful CAT shortcuts. It converts complex mixture/weighted average problems into simple cross-subtraction.
             </WhyCATCares>
 
-            <h2 className="text-2xl font-bold text-blue-600 dark:text-blue-400">Finding the Centre</h2>
+            <h2 className="content-section-title">Finding the Centre</h2>
             <p>Weighted average: <InlineMath math="\frac{n_1 A_1 + n_2 A_2}{n_1 + n_2}" />.</p>
 
             <HowToSpot>
               Look for: "mixture of two types," "average of groups combined," "in what ratio must X be mixed with Y."
             </HowToSpot>
 
-            <h3 className="text-xl font-semibold mt-4">The Alligation Rule</h3>
-            <div className="p-4 bg-amber-50 dark:bg-amber-900/20 rounded-lg">
+            <h3 className="content-section-title-level-3">The Alligation Rule</h3>
+            <div className="p-4 bg-surface-alt rounded-lg">
               <p>To mix two ingredients with values <InlineMath math="C_1" /> and <InlineMath math="C_2" /> to get mean <InlineMath math="M" />:</p>
               <BlockMath math="\frac{\text{Qty of cheaper}}{\text{Qty of dearer}} = \frac{C_2 - M}{M - C_1}" />
             </div>
@@ -835,23 +835,23 @@ export const syllabus: Module[] = [
         id: 'time-speed-distance',
         title: 'Time, Speed & Distance',
         content: (
-          <div className="space-y-6 text-gray-800 dark:text-gray-200">
+          <div className="space-y-6 text-ink">
             <WhyCATCares>
               TSD is the most diverse arithmetic sub-topic. It appears in 2–3 questions per CAT paper and tests your ability to visualize motion scenarios.
             </WhyCATCares>
 
-            <h2 className="text-2xl font-bold text-blue-600 dark:text-blue-400">The Dynamics of Motion</h2>
+            <h2 className="content-section-title">The Dynamics of Motion</h2>
 
             <HowToSpot>
               Look for: trains crossing, boats upstream/downstream, people meeting on tracks, "average speed for a round trip."
             </HowToSpot>
 
-            <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border-l-4 border-blue-500">
+            <div className="note-block-highlight">
               <BlockMath math="D = S \times T" />
               <p className="text-sm mt-2">Remember: 1 km/h = 5/18 m/s</p>
             </div>
 
-            <h3 className="text-xl font-semibold mt-8">Relative Speed</h3>
+            <h3 className="content-section-title-level-3">Relative Speed</h3>
             <p>Imagine walking on an airport moving walkway. Walking with the belt = speeds add (downstream). Walking against = speeds subtract (upstream).</p>
             <ul className="list-disc list-inside space-y-2 mt-2">
               <li><strong>Same Direction:</strong> <InlineMath math="|S_1 - S_2|" /></li>
@@ -863,16 +863,16 @@ export const syllabus: Module[] = [
               <br /><em>Trigger: Use when someone travels the same distance at two different speeds (e.g., to office and back).</em>
             </Shortcut>
 
-            <h3 className="text-xl font-semibold mt-8">Boats and Streams</h3>
+            <h3 className="content-section-title-level-3">Boats and Streams</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
-              <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 shadow-sm">
+              <div className="content-block-sm">
                 <h4 className="font-bold text-center">Downstream = B + S</h4>
               </div>
-              <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 shadow-sm">
+              <div className="content-block-sm">
                 <h4 className="font-bold text-center">Upstream = B - S</h4>
               </div>
             </div>
-            <div className="p-4 bg-emerald-50 dark:bg-emerald-900/20 rounded-lg mt-4">
+            <div className="p-4 bg-content-note rounded-lg mt-4">
               <p className="text-sm"><strong>Quick derivation:</strong> B = (Down + Up)/2, S = (Down - Up)/2</p>
             </div>
 
@@ -900,12 +900,12 @@ export const syllabus: Module[] = [
         id: 'time-work',
         title: 'Time & Work',
         content: (
-          <div className="space-y-6 text-gray-800 dark:text-gray-200">
+          <div className="space-y-6 text-ink">
             <WhyCATCares>
               Time & Work questions are essentially ratio problems in disguise. The LCM method makes them trivially easy once mastered.
             </WhyCATCares>
 
-            <h2 className="text-2xl font-bold text-blue-600 dark:text-blue-400">Efficiency Counts</h2>
+            <h2 className="content-section-title">Efficiency Counts</h2>
             <p>If a person takes <InlineMath math="d" /> days to do a job, their 1-day work = <InlineMath math="1/d" />.</p>
 
             <HowToSpot>
@@ -919,7 +919,7 @@ export const syllabus: Module[] = [
               <br />Time together = 60/9 = 6⅔ days. <em>No fractions needed until the end!</em>
             </Shortcut>
 
-            <div className="p-4 bg-emerald-50 dark:bg-emerald-900/20 rounded-lg mt-4">
+            <div className="p-4 bg-content-note rounded-lg mt-4">
               <p className="font-bold">Pipes & Cisterns</p>
               <p>Inlet pipe: +ve efficiency; Outlet (leak): -ve efficiency. Same logic as Time & Work.</p>
             </div>
@@ -952,31 +952,31 @@ export const syllabus: Module[] = [
         id: 'algebraic-identities',
         title: 'Algebraic Identities',
         content: (
-          <div className="space-y-6 text-gray-800 dark:text-gray-200">
+          <div className="space-y-6 text-ink">
             <WhyCATCares>
               Identities let you simplify complex expressions in seconds. Questions like "find 99²" become mental math with the right identity.
             </WhyCATCares>
-            <h2 className="text-2xl font-bold text-blue-600 dark:text-blue-400">Standard Algebraic Expansions</h2>
+            <h2 className="content-section-title">Standard Algebraic Expansions</h2>
 
             <HowToSpot>
               Look for: expressions involving squares, cubes, or sums/differences that match a known pattern.
             </HowToSpot>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-                <p className="font-bold text-blue-700 dark:text-blue-400">Square of Sum</p>
+              <div className="p-4 bg-content-highlight rounded-lg">
+                <p className="font-bold text-primary">Square of Sum</p>
                 <BlockMath math="(a + b)^2 = a^2 + 2ab + b^2" />
               </div>
-              <div className="p-4 bg-emerald-50 dark:bg-emerald-900/20 rounded-lg">
-                <p className="font-bold text-emerald-700 dark:text-emerald-400">Square of Difference</p>
+              <div className="p-4 bg-content-note rounded-lg">
+                <p className="font-bold text-success">Square of Difference</p>
                 <BlockMath math="(a - b)^2 = a^2 - 2ab + b^2" />
               </div>
-              <div className="p-4 bg-rose-50 dark:bg-rose-900/20 rounded-lg">
-                <p className="font-bold text-rose-700 dark:text-rose-400">Difference of Squares</p>
+              <div className="p-4 bg-surface-alt rounded-lg">
+                <p className="font-bold text-primary">Difference of Squares</p>
                 <BlockMath math="a^2 - b^2 = (a+b)(a-b)" />
               </div>
-              <div className="p-4 bg-indigo-50 dark:bg-indigo-900/20 rounded-lg">
-                <p className="font-bold text-indigo-700 dark:text-indigo-400">Three Variable Identity</p>
+              <div className="p-4 bg-surface-alt rounded-lg">
+                <p className="font-bold text-primary">Three Variable Identity</p>
                 <BlockMath math="a^3 + b^3 + c^3 - 3abc = (a+b+c)(a^2+b^2+c^2-ab-bc-ca)" />
               </div>
             </div>
@@ -1005,20 +1005,20 @@ export const syllabus: Module[] = [
         id: 'linear-equations',
         title: 'Linear Equations',
         content: (
-          <div className="space-y-6 text-gray-800 dark:text-gray-200">
+          <div className="space-y-6 text-ink">
             <WhyCATCares>
               Linear equations are the workhorse of word problems — ages, mixtures, costs. Understanding when a system has no solution or infinite solutions is tested directly.
             </WhyCATCares>
-            <h2 className="text-2xl font-bold text-blue-600 dark:text-blue-400">Systems of Equations</h2>
+            <h2 className="content-section-title">Systems of Equations</h2>
 
             <HowToSpot>
               Look for: two unknowns with two conditions, "find x and y such that," age problems, cost-allocation problems.
             </HowToSpot>
 
-            <h3 className="text-xl font-semibold mt-6">Conditions for Solutions</h3>
-            <div className="overflow-x-auto mt-4 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm">
-              <table className="min-w-full bg-white dark:bg-gray-800">
-                <thead className="bg-gray-50 dark:bg-gray-900">
+            <h3 className="content-section-title-level-3">Conditions for Solutions</h3>
+            <div className="overflow-x-auto mt-4 content-block">
+              <table className="min-w-full bg-surface">
+                <thead className="bg-surface-alt">
                   <tr>
                     <th className="py-3 px-4 text-left border-b">Condition</th>
                     <th className="py-3 px-4 text-left border-b">Meaning</th>
@@ -1026,9 +1026,9 @@ export const syllabus: Module[] = [
                   </tr>
                 </thead>
                 <tbody>
-                  <tr className="border-b"><td className="py-3 px-4"><InlineMath math="\frac{a_1}{a_2} \neq \frac{b_1}{b_2}" /></td><td className="py-3 px-4">Intersecting</td><td className="py-3 px-4 font-semibold text-emerald-600">Unique</td></tr>
-                  <tr className="border-b"><td className="py-3 px-4"><InlineMath math="\frac{a_1}{a_2} = \frac{b_1}{b_2} = \frac{c_1}{c_2}" /></td><td className="py-3 px-4">Coincident</td><td className="py-3 px-4 font-semibold text-blue-600">Infinite</td></tr>
-                  <tr><td className="py-3 px-4"><InlineMath math="\frac{a_1}{a_2} = \frac{b_1}{b_2} \neq \frac{c_1}{c_2}" /></td><td className="py-3 px-4">Parallel</td><td className="py-3 px-4 font-semibold text-red-600">None</td></tr>
+                  <tr className="border-b"><td className="py-3 px-4"><InlineMath math="\frac{a_1}{a_2} \neq \frac{b_1}{b_2}" /></td><td className="py-3 px-4">Intersecting</td><td className="py-3 px-4 font-semibold text-success">Unique</td></tr>
+                  <tr className="border-b"><td className="py-3 px-4"><InlineMath math="\frac{a_1}{a_2} = \frac{b_1}{b_2} = \frac{c_1}{c_2}" /></td><td className="py-3 px-4">Coincident</td><td className="py-3 px-4 font-semibold text-primary">Infinite</td></tr>
+                  <tr><td className="py-3 px-4"><InlineMath math="\frac{a_1}{a_2} = \frac{b_1}{b_2} \neq \frac{c_1}{c_2}" /></td><td className="py-3 px-4">Parallel</td><td className="py-3 px-4 font-semibold text-error">None</td></tr>
                 </tbody>
               </table>
             </div>
@@ -1047,13 +1047,13 @@ export const syllabus: Module[] = [
         id: 'quadratic-equations',
         title: 'Quadratic Equations',
         content: (
-          <div className="space-y-6 text-gray-800 dark:text-gray-200">
+          <div className="space-y-6 text-ink">
             <WhyCATCares>
               Quadratics appear in ~2–3 questions per CAT. Vieta's formulas (sum and product of roots) save massive time — you can answer without finding the actual roots.
             </WhyCATCares>
-            <h2 className="text-2xl font-bold text-blue-600 dark:text-blue-400">Polynomials of Degree 2</h2>
+            <h2 className="content-section-title">Polynomials of Degree 2</h2>
 
-            <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg flex justify-center mt-2">
+            <div className="p-4 bg-content-highlight rounded-lg flex justify-center mt-2">
               <BlockMath math="x = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a}" />
             </div>
 
@@ -1061,7 +1061,7 @@ export const syllabus: Module[] = [
               Look for: "roots of the equation," "sum/product of roots," "nature of roots," "form a new equation whose roots are..."
             </HowToSpot>
 
-            <h3 className="text-xl font-semibold mt-6">Discriminant</h3>
+            <h3 className="content-section-title-level-3">Discriminant</h3>
             <ul className="list-disc list-inside space-y-2 mt-2">
               <li><InlineMath math="\Delta > 0" />: Two distinct real roots</li>
               <li><InlineMath math="\Delta = 0" />: Two equal real roots</li>
@@ -1087,18 +1087,18 @@ export const syllabus: Module[] = [
         id: 'inequalities',
         title: 'Inequalities & Modulus',
         content: (
-          <div className="space-y-6 text-gray-800 dark:text-gray-200">
+          <div className="space-y-6 text-ink">
             <WhyCATCares>
               Inequality and modulus questions are CAT favorites because they test conceptual understanding, not calculation speed. Understanding the "sign-flip" rule and interval method is essential.
             </WhyCATCares>
-            <h2 className="text-2xl font-bold text-blue-600 dark:text-blue-400">Ranges and Absolute Values</h2>
+            <h2 className="content-section-title">Ranges and Absolute Values</h2>
 
             <HowToSpot>
               Look for: "solve the inequality," "find the range of x," "|expression| = value," "number of integer solutions."
             </HowToSpot>
 
-            <h3 className="text-xl font-semibold mt-6">Key Rules</h3>
-            <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+            <h3 className="content-section-title-level-3">Key Rules</h3>
+            <div className="p-4 bg-content-highlight rounded-lg">
               <ul className="list-disc list-inside space-y-1 text-sm">
                 <li>Adding/subtracting preserves inequality direction</li>
                 <li><strong>Multiplying/dividing by a negative number FLIPS the inequality</strong></li>
@@ -1108,8 +1108,8 @@ export const syllabus: Module[] = [
               </ul>
             </div>
 
-            <h3 className="text-xl font-semibold mt-6">Wavy Curve Method (Quadratic Inequalities)</h3>
-            <div className="p-4 bg-emerald-50 dark:bg-emerald-900/20 rounded-lg border-l-4 border-emerald-500">
+            <h3 className="content-section-title-level-3">Wavy Curve Method (Quadratic Inequalities)</h3>
+            <div className="note-block-note">
               <ol className="list-decimal list-inside space-y-1 text-sm">
                 <li>Factor the expression</li>
                 <li>Find critical points (roots)</li>
@@ -1142,18 +1142,18 @@ export const syllabus: Module[] = [
         id: 'maxima-minima',
         title: 'Maxima & Minima',
         content: (
-          <div className="space-y-6 text-gray-800 dark:text-gray-200">
+          <div className="space-y-6 text-ink">
             <WhyCATCares>
               "Find the maximum/minimum value" questions appear regularly. The quadratic vertex method handles most of them in under 30 seconds.
             </WhyCATCares>
-            <h2 className="text-2xl font-bold text-blue-600 dark:text-blue-400">Finding Extreme Values</h2>
+            <h2 className="content-section-title">Finding Extreme Values</h2>
 
             <HowToSpot>
               Look for: "maximum value of," "minimum value of," "largest area with given perimeter," any optimization.
             </HowToSpot>
 
-            <h3 className="text-xl font-semibold mt-6">Quadratic Vertex Method</h3>
-            <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+            <h3 className="content-section-title-level-3">Quadratic Vertex Method</h3>
+            <div className="p-4 bg-content-highlight rounded-lg">
               <p className="font-medium">For <InlineMath math="ax^2 + bx + c" />:</p>
               <BlockMath math="\text{Vertex at } x = -\frac{b}{2a}" />
               <BlockMath math="\text{Extreme value} = c - \frac{b^2}{4a}" />
@@ -1185,23 +1185,23 @@ export const syllabus: Module[] = [
         id: 'functions-graphs',
         title: 'Functions & Graphs',
         content: (
-          <div className="space-y-6 text-gray-800 dark:text-gray-200">
+          <div className="space-y-6 text-ink">
             <WhyCATCares>
               Function questions test whether you can think abstractly. "Find f(f(x))" or "number of solutions" questions are increasingly common in CAT.
             </WhyCATCares>
-            <h2 className="text-2xl font-bold text-blue-600 dark:text-blue-400">Understanding Functions</h2>
+            <h2 className="content-section-title">Understanding Functions</h2>
 
             <HowToSpot>
               Look for: "f(x) = ..., find f(f(x))," "domain of," "number of real roots," graph-based questions.
             </HowToSpot>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-                <h4 className="font-bold text-blue-700 dark:text-blue-400">Domain</h4>
+              <div className="p-4 bg-content-highlight rounded-lg">
+                <h4 className="font-bold text-primary">Domain</h4>
                 <p className="text-sm">All valid input values. Check for: division by zero, square roots of negatives.</p>
               </div>
-              <div className="p-4 bg-emerald-50 dark:bg-emerald-900/20 rounded-lg">
-                <h4 className="font-bold text-emerald-700 dark:text-emerald-400">Range</h4>
+              <div className="p-4 bg-content-note rounded-lg">
+                <h4 className="font-bold text-success">Range</h4>
                 <p className="text-sm">All possible output values.</p>
               </div>
             </div>
@@ -1230,42 +1230,42 @@ export const syllabus: Module[] = [
         id: 'logarithms',
         title: 'Logarithms & Indices',
         content: (
-          <div className="space-y-6 text-gray-800 dark:text-gray-200">
+          <div className="space-y-6 text-ink">
             <WhyCATCares>
               Logarithm questions appear 1–2 times per CAT. They look scary but are just 4 properties applied repeatedly. Master those and you'll solve them in 60 seconds.
             </WhyCATCares>
-            <h2 className="text-2xl font-bold text-blue-600 dark:text-blue-400">Logarithms & Exponents</h2>
+            <h2 className="content-section-title">Logarithms & Exponents</h2>
 
             <HowToSpot>
               Look for: "log," "simplify," "if log₁₀ 2 = 0.301, find...," expressions with exponents that need simplification.
             </HowToSpot>
 
-            <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+            <div className="p-4 bg-content-highlight rounded-lg">
               <BlockMath math="\log_b a = c \iff b^c = a" />
             </div>
 
-            <h3 className="text-xl font-semibold mt-6">The 4 Properties You Need</h3>
+            <h3 className="content-section-title-level-3">The 4 Properties You Need</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="p-4 bg-emerald-50 dark:bg-emerald-900/20 rounded-lg">
+              <div className="p-4 bg-content-note rounded-lg">
                 <p className="font-bold">Product: <InlineMath math="\log(mn) = \log m + \log n" /></p>
               </div>
-              <div className="p-4 bg-purple-50 dark:bg-purple-900/20 rounded-lg">
+              <div className="p-4 bg-surface-alt rounded-lg">
                 <p className="font-bold">Quotient: <InlineMath math="\log(m/n) = \log m - \log n" /></p>
               </div>
-              <div className="p-4 bg-orange-50 dark:bg-orange-900/20 rounded-lg">
+              <div className="p-4 bg-surface-alt rounded-lg">
                 <p className="font-bold">Power: <InlineMath math="\log(m^n) = n \log m" /></p>
               </div>
-              <div className="p-4 bg-rose-50 dark:bg-rose-900/20 rounded-lg">
+              <div className="p-4 bg-surface-alt rounded-lg">
                 <p className="font-bold">Base Change: <InlineMath math="\log_b a = \frac{\log a}{\log b}" /></p>
               </div>
             </div>
 
-            <h3 className="text-xl font-semibold mt-6">Laws of Indices</h3>
+            <h3 className="content-section-title-level-3">Laws of Indices</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="p-4 bg-gray-50 dark:bg-gray-800/50 rounded-lg">
+              <div className="p-4 bg-surface-alt rounded-lg">
                 <BlockMath math="a^m \times a^n = a^{m+n}" />
               </div>
-              <div className="p-4 bg-gray-50 dark:bg-gray-800/50 rounded-lg">
+              <div className="p-4 bg-surface-alt rounded-lg">
                 <BlockMath math="(a^m)^n = a^{mn}" />
               </div>
             </div>
@@ -1305,32 +1305,32 @@ export const syllabus: Module[] = [
         id: 'triangles',
         title: 'Triangles',
         content: (
-          <div className="space-y-6 text-gray-800 dark:text-gray-200">
+          <div className="space-y-6 text-ink">
             <WhyCATCares>
               Triangles are the most tested geometry shape. Similarity ratios and Pythagoras alone can solve 70% of geometry questions.
             </WhyCATCares>
-            <h2 className="text-2xl font-bold text-blue-600 dark:text-blue-400">Triangles: Properties & Theorems</h2>
+            <h2 className="content-section-title">Triangles: Properties & Theorems</h2>
 
             <HowToSpot>
               Look for: right triangles, "ratio of areas," parallel lines cutting triangles, medians/altitudes.
             </HowToSpot>
 
-            <h3 className="text-xl font-semibold mt-6">Pythagoras Theorem</h3>
-            <div className="p-4 bg-purple-50 dark:bg-purple-900/20 rounded-lg border-l-4 border-purple-500">
+            <h3 className="content-section-title-level-3">Pythagoras Theorem</h3>
+            <div className="content-block-sm">
               <BlockMath math="a^2 + b^2 = c^2" />
               <p className="text-sm mt-2">Common triplets: (3,4,5), (5,12,13), (8,15,17), (7,24,25). Memorize these!</p>
             </div>
 
-            <h3 className="text-xl font-semibold mt-6">Similar Triangles</h3>
+            <h3 className="content-section-title-level-3">Similar Triangles</h3>
             <Shortcut>
               In similar triangles: <strong>Ratio of areas = square of ratio of sides.</strong>
               <br />If sides are in ratio 2:3, areas are in ratio 4:9.
             </Shortcut>
 
-            <h3 className="text-xl font-semibold mt-6">Thales Theorem (Basic Proportionality)</h3>
+            <h3 className="content-section-title-level-3">Thales Theorem (Basic Proportionality)</h3>
             <p>If DE ∥ BC in △ABC, then AD/DB = AE/EC.</p>
 
-            <h3 className="text-xl font-semibold mt-6">Special Points</h3>
+            <h3 className="content-section-title-level-3">Special Points</h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
               {[
                 { name: 'Centroid', desc: 'Medians meet. Divides median 2:1' },
@@ -1338,9 +1338,9 @@ export const syllabus: Module[] = [
                 { name: 'Circumcenter', desc: '⟂ bisectors. Center of circumscribed circle' },
                 { name: 'Orthocenter', desc: 'Altitudes meet' }
               ].map(point => (
-                <div key={point.name} className="p-3 bg-gray-50 dark:bg-gray-800/50 rounded-lg text-center">
+                <div key={point.name} className="p-3 bg-surface-alt rounded-lg text-center">
                   <p className="font-semibold text-sm">{point.name}</p>
-                  <p className="text-xs text-gray-500 mt-1">{point.desc}</p>
+                  <p className="text-xs text-ink-muted mt-1">{point.desc}</p>
                 </div>
               ))}
             </div>
@@ -1371,26 +1371,26 @@ export const syllabus: Module[] = [
         id: 'circles',
         title: 'Circles',
         content: (
-          <div className="space-y-6 text-gray-800 dark:text-gray-200">
+          <div className="space-y-6 text-ink">
             <WhyCATCares>
               Circle questions test tangent properties and cyclic quadrilaterals. The "tangent ⟂ radius" property alone solves half of all circle problems.
             </WhyCATCares>
-            <h2 className="text-2xl font-bold text-blue-600 dark:text-blue-400">Circle Properties</h2>
+            <h2 className="content-section-title">Circle Properties</h2>
 
             <HowToSpot>
               Look for: tangent lines, chords, "inscribed angle," "cyclic quadrilateral," two circles touching.
             </HowToSpot>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+              <div className="p-4 bg-content-highlight rounded-lg">
                 <BlockMath math="A = \pi r^2" />
               </div>
-              <div className="p-4 bg-emerald-50 dark:bg-emerald-900/20 rounded-lg">
+              <div className="p-4 bg-content-note rounded-lg">
                 <BlockMath math="C = 2\pi r" />
               </div>
             </div>
 
-            <h3 className="text-xl font-semibold mt-6">Key Properties</h3>
+            <h3 className="content-section-title-level-3">Key Properties</h3>
             <ul className="list-disc list-inside space-y-2">
               <li>Tangent ⟂ radius at point of contact</li>
               <li>Two tangents from an external point are equal in length</li>
@@ -1422,23 +1422,23 @@ export const syllabus: Module[] = [
         id: 'polygons',
         title: 'Polygons',
         content: (
-          <div className="space-y-6 text-gray-800 dark:text-gray-200">
+          <div className="space-y-6 text-ink">
             <WhyCATCares>
               Polygon questions are usually formula-based and quick. Know the angle and diagonal formulas and you'll solve them in 20 seconds.
             </WhyCATCares>
-            <h2 className="text-2xl font-bold text-blue-600 dark:text-blue-400">Polygon Properties</h2>
+            <h2 className="content-section-title">Polygon Properties</h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+              <div className="p-4 bg-content-highlight rounded-lg">
                 <h4 className="font-bold">Sum of Interior Angles</h4>
                 <BlockMath math="(n-2) \times 180°" />
               </div>
-              <div className="p-4 bg-emerald-50 dark:bg-emerald-900/20 rounded-lg">
+              <div className="p-4 bg-content-note rounded-lg">
                 <h4 className="font-bold">Each Interior Angle (Regular)</h4>
                 <BlockMath math="\frac{(n-2) \times 180°}{n}" />
               </div>
             </div>
-            <div className="p-4 bg-purple-50 dark:bg-purple-900/20 rounded-lg mt-4">
+            <div className="p-4 bg-surface-alt rounded-lg mt-4">
               <h4 className="font-bold">Number of Diagonals</h4>
               <BlockMath math="\frac{n(n-3)}{2}" />
             </div>
@@ -1467,11 +1467,11 @@ export const syllabus: Module[] = [
         id: 'mensuration-2d',
         title: 'Mensuration (2D)',
         content: (
-          <div className="space-y-6 text-gray-800 dark:text-gray-200">
+          <div className="space-y-6 text-ink">
             <WhyCATCares>
               Area and perimeter calculations are the most straightforward geometry questions. Know the formulas, get free marks.
             </WhyCATCares>
-            <h2 className="text-2xl font-bold text-blue-600 dark:text-blue-400">Areas & Perimeters</h2>
+            <h2 className="content-section-title">Areas & Perimeters</h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {[
@@ -1480,10 +1480,10 @@ export const syllabus: Module[] = [
                 { name: 'Rectangle', area: 'l × b', extra: 'Diagonal = √(l²+b²)' },
                 { name: 'Trapezium', area: '½ × (a+b) × h', extra: 'a, b are parallel sides' },
               ].map(shape => (
-                <div key={shape.name} className="p-4 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700">
-                  <h4 className="font-bold text-blue-600 dark:text-blue-400 mb-2">{shape.name}</h4>
+                <div key={shape.name} className="content-block-sm">
+                  <h4 className="font-bold text-primary mb-2">{shape.name}</h4>
                   <p className="text-sm">Area = {shape.area}</p>
-                  <p className="text-sm text-gray-500">{shape.extra}</p>
+                  <p className="text-sm text-ink-muted">{shape.extra}</p>
                 </div>
               ))}
             </div>
@@ -1506,30 +1506,30 @@ export const syllabus: Module[] = [
         id: 'mensuration-3d',
         title: 'Mensuration (3D)',
         content: (
-          <div className="space-y-6 text-gray-800 dark:text-gray-200">
+          <div className="space-y-6 text-ink">
             <WhyCATCares>
               3D mensuration questions are usually about "melting and recasting" (volume stays constant) or "painting" (surface area). Know 5 shapes and you're set.
             </WhyCATCares>
-            <h2 className="text-2xl font-bold text-blue-600 dark:text-blue-400">Volume & Surface Area</h2>
+            <h2 className="content-section-title">Volume & Surface Area</h2>
 
             <HowToSpot>
               Look for: "volume of," "surface area of," "melted and recast into," "water rises by X cm when object is submerged."
             </HowToSpot>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+              <div className="p-4 bg-content-highlight rounded-lg">
                 <h4 className="font-bold">Cube: V = a³, TSA = 6a²</h4>
               </div>
-              <div className="p-4 bg-emerald-50 dark:bg-emerald-900/20 rounded-lg">
+              <div className="p-4 bg-content-note rounded-lg">
                 <h4 className="font-bold">Cuboid: V = lbh, TSA = 2(lb+bh+hl)</h4>
               </div>
-              <div className="p-4 bg-purple-50 dark:bg-purple-900/20 rounded-lg">
+              <div className="p-4 bg-surface-alt rounded-lg">
                 <h4 className="font-bold">Cylinder: V = πr²h, TSA = 2πr(r+h)</h4>
               </div>
-              <div className="p-4 bg-orange-50 dark:bg-orange-900/20 rounded-lg">
+              <div className="p-4 bg-surface-alt rounded-lg">
                 <h4 className="font-bold">Cone: V = ⅓πr²h, l = √(r²+h²)</h4>
               </div>
-              <div className="p-4 bg-rose-50 dark:bg-rose-900/20 rounded-lg">
+              <div className="p-4 bg-surface-alt rounded-lg">
                 <h4 className="font-bold">Sphere: V = 4/3 πr³, SA = 4πr²</h4>
               </div>
             </div>
@@ -1571,22 +1571,22 @@ export const syllabus: Module[] = [
         id: 'permutations-combinations',
         title: 'Permutations & Combinations',
         content: (
-          <div className="space-y-6 text-gray-800 dark:text-gray-200">
+          <div className="space-y-6 text-ink">
             <WhyCATCares>
               P&C appears in 1–2 questions per CAT. The key skill is deciding: "Does order matter?" If yes → Permutation. If no → Combination.
             </WhyCATCares>
-            <h2 className="text-2xl font-bold text-blue-600 dark:text-blue-400">Counting Principles</h2>
+            <h2 className="content-section-title">Counting Principles</h2>
 
             <HowToSpot>
               Look for: "how many ways," "in how many arrangements," "select a committee," "form a number."
             </HowToSpot>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-              <div className="p-4 bg-emerald-50 dark:bg-emerald-900/20 rounded-lg border-l-4 border-emerald-500">
+              <div className="note-block-note">
                 <h3 className="font-bold">Permutations (Order matters)</h3>
                 <BlockMath math="^nP_r = \frac{n!}{(n-r)!}" />
               </div>
-              <div className="p-4 bg-purple-50 dark:bg-purple-900/20 rounded-lg border-l-4 border-purple-500">
+              <div className="content-block-sm">
                 <h3 className="font-bold">Combinations (Order doesn't matter)</h3>
                 <BlockMath math="^nC_r = \frac{n!}{r!(n-r)!}" />
               </div>
@@ -1627,27 +1627,27 @@ export const syllabus: Module[] = [
         id: 'probability',
         title: 'Probability',
         content: (
-          <div className="space-y-6 text-gray-800 dark:text-gray-200">
+          <div className="space-y-6 text-ink">
             <WhyCATCares>
               Probability questions in CAT are straightforward if you think systematically. The complement rule ("at least one" = 1 - P(none)) is the most useful trick.
             </WhyCATCares>
-            <h2 className="text-2xl font-bold text-blue-600 dark:text-blue-400">Probability Theory</h2>
+            <h2 className="content-section-title">Probability Theory</h2>
 
             <HowToSpot>
               Look for: "probability of," "likelihood," "at least one," "both events," dice/coin/card problems.
             </HowToSpot>
 
-            <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+            <div className="p-4 bg-content-highlight rounded-lg">
               <BlockMath math="P(E) = \frac{\text{Favorable outcomes}}{\text{Total outcomes}}" />
             </div>
 
-            <h3 className="text-xl font-semibold mt-6">Key Formulas</h3>
+            <h3 className="content-section-title-level-3">Key Formulas</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="p-4 bg-emerald-50 dark:bg-emerald-900/20 rounded-lg">
+              <div className="p-4 bg-content-note rounded-lg">
                 <h4 className="font-bold">Independent Events</h4>
                 <BlockMath math="P(A \cap B) = P(A) \times P(B)" />
               </div>
-              <div className="p-4 bg-purple-50 dark:bg-purple-900/20 rounded-lg">
+              <div className="p-4 bg-surface-alt rounded-lg">
                 <h4 className="font-bold">Conditional Probability</h4>
                 <BlockMath math="P(A|B) = \frac{P(A \cap B)}{P(B)}" />
               </div>
@@ -1678,18 +1678,18 @@ export const syllabus: Module[] = [
         id: 'set-theory-venn',
         title: 'Set Theory & Venn Diagrams',
         content: (
-          <div className="space-y-6 text-gray-800 dark:text-gray-200">
+          <div className="space-y-6 text-ink">
             <WhyCATCares>
               Venn diagram questions appear in both QA and DILR. The 3-set formula is especially important — master it once, use it everywhere.
             </WhyCATCares>
-            <h2 className="text-2xl font-bold text-blue-600 dark:text-blue-400">Set Theory & Venn Diagrams</h2>
+            <h2 className="content-section-title">Set Theory & Venn Diagrams</h2>
 
             <HowToSpot>
               Look for: "how many belong to at least one," "exactly two groups," "none of the above," overlapping categories.
             </HowToSpot>
 
-            <h3 className="text-xl font-semibold mt-6">Inclusion-Exclusion</h3>
-            <div className="p-4 bg-purple-50 dark:bg-purple-900/20 rounded-lg border-l-4 border-purple-500">
+            <h3 className="content-section-title-level-3">Inclusion-Exclusion</h3>
+            <div className="content-block-sm">
               <p className="font-medium">Two sets:</p>
               <BlockMath math="|A \cup B| = |A| + |B| - |A \cap B|" />
               <p className="font-medium mt-2">Three sets:</p>
@@ -1714,23 +1714,23 @@ export const syllabus: Module[] = [
         id: 'sequences-progressions',
         title: 'Sequences & Progressions',
         content: (
-          <div className="space-y-6 text-gray-800 dark:text-gray-200">
+          <div className="space-y-6 text-ink">
             <WhyCATCares>
               AP and GP questions are formula-driven and quick. The infinite GP sum formula is especially useful for recurring decimal conversions and advanced problems.
             </WhyCATCares>
-            <h2 className="text-2xl font-bold text-blue-600 dark:text-blue-400">AP, GP & HP</h2>
+            <h2 className="content-section-title">AP, GP & HP</h2>
 
             <HowToSpot>
               Look for: "constant difference" (AP), "constant ratio" (GP), "sum of series," "infinite sum."
             </HowToSpot>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+              <div className="p-4 bg-content-highlight rounded-lg">
                 <h4 className="font-bold">AP</h4>
                 <p className="text-sm">nth term: <InlineMath math="a + (n-1)d" /></p>
                 <p className="text-sm">Sum: <InlineMath math="\frac{n}{2}[2a + (n-1)d]" /></p>
               </div>
-              <div className="p-4 bg-emerald-50 dark:bg-emerald-900/20 rounded-lg">
+              <div className="p-4 bg-content-note rounded-lg">
                 <h4 className="font-bold">GP</h4>
                 <p className="text-sm">nth term: <InlineMath math="ar^{n-1}" /></p>
                 <p className="text-sm">Sum: <InlineMath math="\frac{a(r^n - 1)}{r - 1}" /></p>

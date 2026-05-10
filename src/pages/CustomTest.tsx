@@ -4,6 +4,59 @@ import { getAllTopics, QuizQuestion } from '../data/syllabus';
 import { QuizEngine } from '../components/QuizEngine';
 import { cn } from '../lib/utils';
 
+function parseAIResponse(content: string): QuizQuestion[] {
+  // Remove markdown code fences
+  let cleaned = content.replace(/^```(?:json)?\s*\n?/i, '').replace(/\n?```\s*$/i, '');
+
+  // Extract JSON object or array
+  const firstBrace = cleaned.indexOf('{');
+  const firstBracket = cleaned.indexOf('[');
+  const lastBrace = cleaned.lastIndexOf('}');
+  const lastBracket = cleaned.lastIndexOf(']');
+
+  let jsonStr = '';
+  if (firstBrace !== -1 && lastBrace !== -1 && firstBrace < lastBrace) {
+    jsonStr = cleaned.substring(firstBrace, lastBrace + 1);
+  } else if (firstBracket !== -1 && lastBracket !== -1 && firstBracket < lastBracket) {
+    jsonStr = cleaned.substring(firstBracket, lastBracket + 1);
+  } else {
+    throw new Error('AI response does not contain valid JSON.');
+  }
+
+  // Clean HTML entities and fix unquoted keys
+  jsonStr = jsonStr.trim()
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&amp;/g, '&')
+    .replace(/,\s*([}\]])/g, '$1')
+    .replace(/([{,])\s*([a-zA-Z_][a-zA-Z0-9_]*)\s*:/g, '$1"$2":');
+
+  const parsed = JSON.parse(jsonStr);
+  const questionsArray = Array.isArray(parsed) ? parsed : parsed.questions || [];
+
+  if (!Array.isArray(questionsArray) || questionsArray.length === 0) {
+    throw new Error('No questions found in AI response.');
+  }
+
+  return questionsArray.map((item: any) => {
+    let correct: number | string = item.correctAnswer;
+    if (item.type === 'mcq') {
+      const index = item.options?.findIndex((opt: string) => opt === item.correctAnswer) ?? -1;
+      correct = index !== -1 ? index : 0;
+    }
+    return {
+      id: item.id,
+      type: item.type,
+      question: item.question,
+      options: item.options,
+      correct,
+      solution: item.solution,
+    };
+  });
+}
+
 export function CustomTest() {
   const allTopics = getAllTopics();
   const [selectedTopics, setSelectedTopics] = useState<string[]>([]);
@@ -18,7 +71,7 @@ export function CustomTest() {
     );
   };
 
-  const handleGenerate = async (retryCount = 0) => {
+  const handleGenerate = async () => {
     if (selectedTopics.length === 0) {
       setError('Please select at least one topic.');
       return;
@@ -28,138 +81,64 @@ export function CustomTest() {
     setError('');
     setGeneratedQuestions([]);
 
-    // Fake delay for better UX
+    // Simulate processing delay for UX
     await new Promise(resolve => setTimeout(resolve, 800));
 
-    try {
-      const topicNames = selectedTopics
-        .map(id => allTopics.find(t => t.id === id)?.title)
-        .filter(Boolean)
-        .join(', ');
+    let apiRetryCount = 0;
+    const maxApiRetries = 2;
 
-      const response = await fetch('/api/generate-questions', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ topicNames, numQuestions })
-      });
-
-      if (!response.ok) {
-        let errorData;
-        try {
-          errorData = await response.json();
-        } catch {
-          throw new Error(`API Error: ${response.status} - ${response.statusText}`);
-        }
-        
-        // Retry on rate limit
-        if (response.status === 429 && retryCount < 2) {
-          setError('Professor is busy. Retrying in a moment...');
-          await new Promise(resolve => setTimeout(resolve, 2000));
-          return handleGenerate(retryCount + 1);
-        }
-        
-        throw new Error(errorData.error || `API Error: ${response.status}`);
-      }
-
-      let result;
+    while (apiRetryCount <= maxApiRetries) {
       try {
-        result = await response.json();
-      } catch (jsonError) {
-        // Retry once on JSON parse error
-        if (retryCount < 1) {
-          setError('Professor got confused. Trying again...');
-          await new Promise(resolve => setTimeout(resolve, 1500));
-          return handleGenerate(retryCount + 1);
+        const topicNames = selectedTopics
+          .map(id => allTopics.find(t => t.id === id)?.title)
+          .filter(Boolean)
+          .join(', ');
+
+        const response = await fetch('/api/generate-questions', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ topicNames, numQuestions })
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}));
+
+          if (response.status === 429 && apiRetryCount < maxApiRetries) {
+            apiRetryCount++;
+            setError('Professor is busy. Retrying in a moment...');
+            await new Promise(resolve => setTimeout(resolve, 2000));
+            continue;
+          }
+
+          throw new Error(errorData.error || `API Error: ${response.status}`);
         }
-        throw new Error('Professor got confused. Please try again with fewer questions.');
-      }
-      let responseText = result.content;
 
-      console.log('Raw AI response:', responseText);
+        const apiResult = await response.json();
+        const questions = parseAIResponse(apiResult.content);
+        setGeneratedQuestions(questions);
+        return;
+      } catch (err: any) {
+        apiRetryCount++;
 
-      // Remove markdown code blocks
-      responseText = responseText.replace(/^```(?:json)?\s*\n?/i, '').replace(/\n?```\s*$/i, '');
+        const message = err.message || 'Failed to generate questions. Please try again.';
+        let userMessage = message;
 
-      // Try to find JSON object or array
-      const firstBrace = responseText.indexOf('{');
-      const firstBracket = responseText.indexOf('[');
-      const lastBrace = responseText.lastIndexOf('}');
-      const lastBracket = responseText.lastIndexOf(']');
-      
-      let jsonText = '';
-      
-      // Prefer object format {"questions": [...]}
-      if (firstBrace !== -1 && lastBrace !== -1 && firstBrace < lastBrace) {
-        jsonText = responseText.substring(firstBrace, lastBrace + 1);
-      } 
-      // Fallback to array format [...]
-      else if (firstBracket !== -1 && lastBracket !== -1 && firstBracket < lastBracket) {
-        jsonText = responseText.substring(firstBracket, lastBracket + 1);
-      } else {
-        throw new Error('AI response does not contain valid JSON. Please try again.');
-      }
-
-      // Clean up common issues
-      jsonText = jsonText.trim()
-        .replace(/&quot;/g, '"')
-        .replace(/&#39;/g, "'")
-        .replace(/&lt;/g, '<')
-        .replace(/&gt;/g, '>')
-        .replace(/&amp;/g, '&')
-        .replace(/,\s*([}\]])/g, '$1')
-        .replace(/([{,])\s*([a-zA-Z_][a-zA-Z0-9_]*)\s*:/g, '$1"$2":');
-
-      console.log('Cleaned JSON:', jsonText);
-
-      let data;
-      try {
-        data = JSON.parse(jsonText);
-      } catch (parseError: any) {
-        console.error('JSON Parse Error:', parseError.message);
-        console.error('Failed JSON:', jsonText.substring(0, 500));
-        throw new Error('Failed to parse AI response. The AI returned invalid JSON. Please try again.');
-      }
-
-      // Handle both {"questions": [...]} and [...] formats
-      const questionsArray = Array.isArray(data) ? data : (data.questions || []);
-      
-      if (!Array.isArray(questionsArray) || questionsArray.length === 0) {
-        throw new Error('No questions found in AI response. Please try again.');
-      }
-
-      const formattedQuestions: QuizQuestion[] = questionsArray.map((q: any) => {
-        let correct: number | string = q.correctAnswer;
-        if (q.type === 'mcq') {
-          const idx = q.options.findIndex((opt: string) => opt === q.correctAnswer);
-          correct = idx !== -1 ? idx : 0;
+        if (message.includes('rate limit') || message.includes('429')) {
+          userMessage = 'Too many students asking questions! Please wait 30 seconds and try again.';
+        } else if (message.includes('timeout') || message.includes('network')) {
+          userMessage = 'Connection issue. Check your internet and try again.';
+        } else if (message.includes('JSON') || message.includes('parse') || message.includes('Invalid')) {
+          userMessage = 'Professor got confused. Try selecting fewer topics or questions.';
         }
-        return {
-          id: q.id,
-          type: q.type,
-          question: q.question,
-          options: q.options,
-          correct,
-          solution: q.solution
-        };
-      });
 
-      setGeneratedQuestions(formattedQuestions);
-    } catch (err: any) {
-      console.error(err);
-      // User-friendly error messages
-      let userMessage = err.message || 'Failed to generate questions. Please try again.';
-      
-      if (userMessage.includes('rate limit') || userMessage.includes('429')) {
-        userMessage = 'Too many students asking questions! Please wait 30 seconds and try again.';
-      } else if (userMessage.includes('timeout') || userMessage.includes('network')) {
-        userMessage = 'Connection issue. Check your internet and try again.';
-      } else if (userMessage.includes('JSON') || userMessage.includes('parse')) {
-        userMessage = 'Professor got confused. Try selecting fewer topics or questions.';
+        if (apiRetryCount > maxApiRetries || !(message.includes('429') || message.includes('JSON'))) {
+          setError(userMessage);
+          break;
+        }
+
+        setError(userMessage);
+        await new Promise(resolve => setTimeout(resolve, 1500));
       }
-      
-      setError(userMessage);
-    } finally {
-      setLoading(false);
     }
   };
 
